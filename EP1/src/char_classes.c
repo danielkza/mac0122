@@ -39,29 +39,23 @@ static const tr_char_class_t tr_char_classes[] = {
 	CHAR_CLASS(xdigit)
 };
 
-char* tr_char_class_expand(const tr_char_class_t* chclass, int *len) {
-	char *buf, *smaller_buf;
+int tr_char_class_expand(const tr_char_class_t* chclass, char* buf, int *len) {
 	int ch, i;
 
-	if(chclass == NULL || chclass->func == NULL || !len)
-		return NULL;
-
-	buf = (char*)malloc((CHAR_MAX - CHAR_MIN + 1) * sizeof(char));
-	if(!buf)
-		return NULL;
+	if(chclass == NULL || chclass->func == NULL || buf == NULL || !len || !*len)
+		return CHAR_CLASS_EXPAND_INVAL;
 
 	i = 0;
-	for(ch = '\0'; ch <= CHAR_MAX; ch++) {
+	for(ch = CHAR_MIN; ch <= CHAR_MAX; ch++) {
+		if(i >= *len)
+			return CHAR_CLASS_EXPAND_BUF_TOO_SMALL;
+
 		if((chclass->func)(ch))
 			buf[i++] = (char)ch;
 	}
 
-	smaller_buf = (char*)realloc(buf, i * sizeof(char));
-	if(smaller_buf)
-		buf = smaller_buf;
-
 	*len = i;
-	return buf;
+	return CHAR_CLASS_EXPAND_SUCCESS;
 }
 
 const tr_char_class_t* tr_char_class_get_by_name(const char* name) {

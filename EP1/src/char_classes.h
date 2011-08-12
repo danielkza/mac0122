@@ -7,6 +7,12 @@
 
 #include "tr_char_list.h"
 
+enum {
+	CHAR_CLASS_EXPAND_SUCCESS       = 0,
+	CHAR_CLASS_EXPAND_INVAL         = -1,
+	CHAR_CLASS_EXPAND_BUF_TOO_SMALL = -2
+};
+
 typedef int (*tr_char_class_func_t)(int);
 
 typedef struct tr_char_class_t {
@@ -16,7 +22,7 @@ typedef struct tr_char_class_t {
 
 
 const tr_char_class_t* tr_char_class_get_by_name(const char* name);
-char* tr_char_class_expand(const tr_char_class_t* chclass, int* len);
+int tr_char_class_expand(const tr_char_class_t* chclass, char* buf, int* len);
 
 	
 #endif // #ifndef TR_CHAR_CLASSES_H

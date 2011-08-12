@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "char_utils.h"
+
 /*
  * Fills a character buffer sequentially with all characters starting from 'start',
  * ranging up to 'end' or until 'maxlen' characters have been written.

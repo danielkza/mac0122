@@ -15,18 +15,11 @@
  */
 
 char tr_parser_parse_char_list(const char* in, size_t buf_initial_size) {
-	enum parser_state {
-		PARSER_READING,
-		PARSER_WAITING_RANGE_END,
-		PARSER_WAITING_REPETITION_COUNT,
-	}
-	
 	char *buf = NULL;
 	size_t buf_size = 0, buf_len = 0;
 
 	const char *pos, *new_pos;
 	char c;
-	parser_state state = PARSER_CHAR;
 
 	if(!in || *in == '\0')
 		return;
