@@ -4,6 +4,7 @@
 #include <limits.h>
 
 #include "utils.h"
+#include "char_vector.h"
 
 #include "char_classes.h"
 
@@ -39,29 +40,27 @@ static const tr_char_class_t tr_char_classes[] = {
 	CHAR_CLASS(xdigit)
 };
 
-int tr_char_class_expand(const tr_char_class_t* chclass, char* buf, int *len) {
+int tr_char_class_expand(const tr_char_class_t* chclass, char_vector_t* out) {
 	int ch, i;
 
-	if(chclass == NULL || chclass->func == NULL || buf == NULL || !len || !*len)
-		return CHAR_CLASS_EXPAND_INVAL;
+	if(!chclass || !chclass->func || !out)
+		return 0;
 
 	i = 0;
 	for(ch = CHAR_MIN; ch <= CHAR_MAX; ch++) {
-		if(i >= *len)
-			return CHAR_CLASS_EXPAND_BUF_TOO_SMALL;
-
-		if((chclass->func)(ch))
-			buf[i++] = (char)ch;
+		if((chclass->func)(ch)) {
+			char_vector_append_char(out, (char)ch);
+			i++;
+		}
 	}
 
-	*len = i;
-	return CHAR_CLASS_EXPAND_SUCCESS;
+	return i; 
 }
 
 const tr_char_class_t* tr_char_class_get_by_name(const char* name) {
 	int i;
 	
-	if(!name)
+	if(!name || *name == '\0')
 		return NULL;
 
 	for(i = 0; i < ARRAY_SIZE(tr_char_classes); i++) {

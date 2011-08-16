@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "utils.h"
 #include "char_utils.h"
 
 /*
@@ -15,6 +16,7 @@
 
 int string_fill_char_range(char* buf, int maxlen, char start, char end) {
 	int i, len;
+	char c;
 
 	len = (end - start) + 1;
 
@@ -24,7 +26,7 @@ int string_fill_char_range(char* buf, int maxlen, char start, char end) {
 	if(len <= 0 || !buf)
 		return 0;
 
-	char c = start;
+	c = start;
 	for(i = 0; i < len; i++)
 		buf[i] = c++;
 	

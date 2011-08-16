@@ -2,18 +2,21 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "char_classes.h"
+#include "token_stack.h"
+#include "tr_parser.h"
 
 int main(int argc, char* argv[])
 {
-	int len;
-	char *expanded;
+	const char* test = "\\440abc[abs]--***:::101023";
 
-	expanded = tr_char_class_expand(tr_char_class_get_by_name("alpha"), &len);
-	if(expanded)
-		printf("%s\n", expanded);
+	token_stack_t* tokens = tr_parser_tokenize(test);
+	token_t* token;
+
+	while((token = token_stack_pop(&tokens)) != NULL) {
+		printf("token:\n"
+			   "	type: %d\n"
+			   "	value: %c\n", token->type, token->value);
+	}
 
 	system("pause");
-
-	return 0;
 }

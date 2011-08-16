@@ -4,80 +4,187 @@
 
 #include "utils.h"
 #include "char_classes.h"
+#include "char_vector.h"
+#include "token_stack.h"
+
 #include "tr_parser.h"
 
-/* Interprets an espace sequence following a backslash into the correct character.
+enum tr_parser_state_t {
+	READING,
+	BRACKET_OPEN,
+	BRACKET_CLOSED,
+	CLASS_OPEN,
+	CLASS_READING,
+	CLASS_CLOSED,
+	EQUIV_OPEN,
+	EQUIV_READING,
+	EQUIV_CLOSE,
+	RANGE_STARTED,
+}
+
+#define TOKEN_FIRST(type) case type:
+#define TOKEN(type) break; case type:
+#define TOKEN_LAST(type) break
+
+char_vector* tr_parser_parse(token_stack** tokens, int string1_length)
+{
+	tr_parser_state_t state = PARSER_STATE_READING;
+	token_t *token;
+	
+	char_vector* char_list = char_vector_new(16);
+	char current_class[16] = "";
+
+	if(!char_list)
+		return NULL;
+
+	token_t *prev = NULL, *token = NULL;
+	while(1) {
+		token_type_t type;
+
+		if(token)
+			prev = token;
+
+		token =  token_stack_pop(tokens);
+		if(!token)
+			break;
+
+		type = token->type;
+
+		switch(state) {			
+		case READING:
+			switch(type) {
+			case BRACKET_OPEN:
+				state = PARSER_STATE_BRACKET_OPEN;
+			break;
+			case HYPHEN
+				if(!prev)
+					PARSER_ERROR("Range start without previous character");
+				else
+					state = PARSER_STATE_RANGE_STARTED;
+			TOKEN_T(TYPE_CHAR)
+				char_vector_append_char(char_lis, token->value);
+			
+				PARSER_ERROR("Invalid token");
+			}
+
+		case PARSER_STATE_BRACKET_OPEN:
+			if(type == TOKEN_CLASS_COLON)
+				state = PARSER_STATE_CLASS_OPEN;
+			else if(type == TOKEN_CLASS_EQUALS)
+				state = PARSER_STATE_EQUIV_OPEN
+
+	}
+
+
+
+
+
+
+token_t* tr_parser_next_token(const char **str) {
+	char c;
+	const char *str_pos;
+	token_t *token;
+	
+	if(!str || !(*str) || **str == '\0')
+		return NULL;
+
+	token = (token_t*)malloc(sizeof(token_t));
+	if(!token)
+		return NULL;
+
+	str_pos = *str;
+	c = *str_pos;
+
+	// this is not in the switch because it is the only sequence that may 
+	// advance the position more than a single character
+	if(c == '\\') {
+		const char *new_pos = NULL;
+		str_pos++;
+
+		// The string ends in a backslash
+		if(*str_pos == '\0') {
+			token->type = TOKEN_CHAR;
+			token->value = '\\';
+		} else {
+			c = tr_parser_unescape(str_pos, &new_pos);
+			
+			// didn't match an escape sequence, just use the next character
+			// unchanged
+			if(str_pos == new_pos)
+				c = *(str_pos++);
+			else
+				str_pos = new_pos;
+			
+			token->type = TOKEN_CHAR;
+			token->value = c;
+		}
+	} else {
+		// match single-character tokens
+		switch(c) {
+		case '-': token->type = TOKEN_HYPHEN;        break;
+		case '[': token->type = TOKEN_BRACKET_OPEN;  break;
+		case ']': token->type = TOKEN_BRACKET_CLOSE; break;
+		case '=': token->type = TOKEN_EQUALS;        break;
+		case ':': token->type = TOKEN_COLON;         break;
+		case '*': token->type = TOKEN_ASTERISK;      break;
+		default:
+			if(isdigit(c))
+				token->type = TOKEN_NUMBER;
+			else
+				token->type = TOKEN_CHAR;
+		}
+
+		token->value = c;
+		str_pos++;
+	}
+
+	// update the position counter
+	*str = str_pos;
+	return token;
+}
+
+token_stack_t* tr_parser_tokenize(const char *str)
+{
+	const char *str_pos;
+	char c = 0;
+
+	token_t *token = NULL;
+	token_stack_t *token_stack = NULL;
+		
+	if(!str || *str == '\0')
+		return NULL;
+	
+	str_pos = str;
+	while((token = tr_parser_next_token(&str_pos)) != NULL)
+		token_stack_push(&token_stack, token);
+
+	return token_stack;
+}
+
+
+/* Interprets an espace sequence following a backslash into the correct
+ * character.
  *
  * The passed string must start right *after* the backslash.
  *
- * If out is not NULL, the address pointed by it will contain the address of the
- * character direct following the last matched character after the function returns;
+ * If out is not NULL, after the function returns its pointee will be set to
+ * the address of the character directly following the last matched character.
  */
 
-char tr_parser_parse_char_list(const char* in, size_t buf_initial_size) {
-	char *buf = NULL;
-	size_t buf_size = 0, buf_len = 0;
-
-	const char *pos, *new_pos;
-	char c;
-
-	if(!in || *in == '\0')
-		return;
-	
-	if(buf_initial_size <= 0)
-		buf_initial_size = TR_PARSER_CHAR_LIST_BUF_INITIAL_SIZE;
-
-	for(pos = in; *pos != '\0'; pos++) {
-		char c, next;
-
-
-		if(buf_size <= buf_len) {
-			buf_size = buf_size ? buf_size * 2
-				                : buf_initial_size;
-
-			buf = (char*)realloc(buf, buf_size * sizeof(char));
-		}
-
-		c = *pos;
-		if(c == '\0')
-			break;
-
-		next = *(pos+1);
-
-		if(c == '\\') {
-			pos++;
-
-			// try to parse backslash sequence, otherwise just use the next character unchanged
-			c = tr_parser_parse_backslash_seq(pos, new_pos);
-			if(pos == new_pos)
-				c = *pos;
-
-			buf[buf_len++] = c;
-			pos++;
-		} else if (strncmp(pos, "[:", 2) == 0) {
-			// try to capture a character class first
-			const char *class_start; int class_len;
-			if(next == ':') {
-				class_start = 
-
-
-
-
-
-char tr_parser_parse_backslash_seq(const char *in, const char **out) {
+char tr_parser_unescape(const char *in, const char **out)
+{
 	const char char_table[][2] = {
 		{'a', '\a'}, {'b', '\b'}, {'f', '\f'}, {'n', '\n'},
 		{'r', '\r'}, {'t', '\t'}, {'v', '\v'}, {'\\', '\\'}
 	};
 	
-	char *pos, c = *in;
+	char c = *in;
 	char octal_val[OCTAL_LITERAL_MAX_LENGTH+1];
 	int i, octal_num;
 
-	// if the string ended, just return a backslash
 	if(c == '\0') {
 		*out = in;
-		return '\\'; 
+		return 0;
 	}
 
 	// try special characters from table first
@@ -93,20 +200,21 @@ char tr_parser_parse_backslash_seq(const char *in, const char **out) {
 	octal_val[OCTAL_LITERAL_MAX_LENGTH] = '\0';
 
 	do {
-		octal_num = strtol(octal_val, &pos, 8);
-		if(octal_val == pos)
+		char *octal_val_end = octal_val;
+		octal_num = strtol(octal_val, &octal_val_end, 8);
+		
+		if(octal_val == octal_val_end)
 			// strtol failed
 			break;
 		else if(octal_num > UCHAR_MAX)
 			// literal too large, try with one fewer character
-			*(pos-1) = '\0';
+			*(octal_val_end-1) = '\0';
 		else {
 			// all good
-			*out = in + (pos - octal_val);
+			*out = in + (octal_val_end - octal_val);
 			return octal_num;
 		}
-	}
-	while(octal_val[0] != '\0');
+	} while(octal_val[0] != '\0');
 
 	// no match found
 	*out = in;

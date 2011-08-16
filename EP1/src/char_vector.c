@@ -4,8 +4,8 @@
 #include "utils.h"
 #include "char_vector.h"
 
-char_vector* char_vector_new(size_t initial_size = 0) {
-	char_vector *vec = (char_vector*)malloc(sizeof(char_vector));
+char_vector_t* char_vector_new(size_t initial_size) {
+	char_vector_t *vec = (char_vector_t*)malloc(sizeof(char_vector_t));
 	if(!vec)
 		return NULL;
 
@@ -23,12 +23,12 @@ char_vector* char_vector_new(size_t initial_size = 0) {
 	return vec;
 }
 
-int char_vector_append_char(char_vector* dest, const char ch) {
+int char_vector_append_char(char_vector_t* dest, const char ch) {
 	return char_vector_append(dest, &ch, 1);
 }
 
-int char_vector_append(char_vector* dest, const char* src, size_t len) {
-	int i;
+int char_vector_append(char_vector_t* dest, const char* src, size_t len) {
+	size_t i;
 
 	if(!dest || !src || !len)
 		return 0;
@@ -41,7 +41,7 @@ int char_vector_append(char_vector* dest, const char* src, size_t len) {
 	return len;
 }
 
-int char_vector_expand(char_vector* vec, size_t desired_size) {
+int char_vector_expand(char_vector_t* vec, size_t desired_size) {
 	char *new_vec;
 	size_t new_size;
 
