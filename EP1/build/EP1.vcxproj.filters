@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\char_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\isblank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tr_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.c" />
+    <ClInclude Include="..\src\char_vector.c" />
+    <ClInclude Include="..\src\isblank.c" />
+    <ClInclude Include="..\src\tr.c" />
+    <ClInclude Include="..\src\tr_char_list.c" />
+    <ClInclude Include="..\src\tr_parser.c" />
+    <ClInclude Include="..\src\char_utils.c" />
+    <ClInclude Include="..\src\char_vector.c" />
+    <ClInclude Include="..\src\isblank.c" />
+    <ClInclude Include="..\src\tr.c" />
+    <ClInclude Include="..\src\tr_char_list.c" />
+    <ClInclude Include="..\src\tr_parser.c" />
+    <ClInclude Include="..\src\char_utils.c" />
+    <ClInclude Include="..\src\char_vector.c" />
+    <ClInclude Include="..\src\isblank.c" />
+    <ClInclude Include="..\src\tr.c" />
+    <ClInclude Include="..\src\tr_char_list.c" />
+    <ClInclude Include="..\src\tr_parser.c" />
+    <ClInclude Include="..\src\char_utils.c" />
+    <ClInclude Include="..\src\char_vector.c" />
+    <ClInclude Include="..\src\isblank.c" />
+    <ClInclude Include="..\src\tr.c" />
+    <ClInclude Include="..\src\tr_char_list.c" />
+    <ClInclude Include="..\src\tr_parser.c" />
+    <ClInclude Include="..\src\char_utils.c" />
+    <ClInclude Include="..\src\char_vector.c" />
+    <ClInclude Include="..\src\isblank.c" />
+    <ClInclude Include="..\src\tr.c" />
+    <ClInclude Include="..\src\tr_char_list.c" />
+    <ClInclude Include="..\src\tr_parser.c" />
+    <ClInclude Include="..\src\char_utils.c" />
+    <ClInclude Include="..\src\char_vector.c" />
+    <ClInclude Include="..\src\isblank.c" />
+    <ClInclude Include="..\src\tr.c" />
+    <ClInclude Include="..\src\tr_char_list.c" />
+    <ClInclude Include="..\src\tr_parser.c" />
+    <ClInclude Include="..\src\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tr_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\isblank.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char_classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\token_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\char_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char_vector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\isblank.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tr_parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char_classes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char_vector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\isblank.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tr_parser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\token_stack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
