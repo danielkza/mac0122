@@ -10,23 +10,19 @@
 #include "tr_parser.h"
 
 enum tr_parser_state_t {
-	READING,
-	BRACKET_OPEN,
-	BRACKET_CLOSED,
-	CLASS_OPEN,
-	CLASS_READING,
-	CLASS_CLOSED,
-	EQUIV_OPEN,
-	EQUIV_READING,
-	EQUIV_CLOSE,
-	RANGE_STARTED,
-}
+	STATE_READING,
+	STATE_BRACKET_OPEN,
+	STATE_BRACKET_CLOSED,
+	STATE_CLASS_OPEN,
+	STATE_CLASS_READING,
+	STATE_CLASS_CLOSED,
+	STATE_EQUIV_OPEN,
+	STATE_EQUIV_READING,
+	STATE_EQUIV_CLOSE,
+	STATE_RANGE_STARTED,
+};
 
-#define TOKEN_FIRST(type) case type:
-#define TOKEN(type) break; case type:
-#define TOKEN_LAST(type) break
-
-char_vector* tr_parser_parse(token_stack** tokens, int string1_length)
+char_vector_t* tr_parser_parse(token_stack** tokens, int string1_length)
 {
 	tr_parser_state_t state = PARSER_STATE_READING;
 	token_t *token;
@@ -50,98 +46,90 @@ char_vector* tr_parser_parse(token_stack** tokens, int string1_length)
 
 		type = token->type;
 
-		switch(state) {			
-		case READING:
-			switch(type) {
-			case BRACKET_OPEN:
-				state = PARSER_STATE_BRACKET_OPEN;
+		switch(state) {
+		case 0:
 			break;
-			case HYPHEN
-				if(!prev)
-					PARSER_ERROR("Range start without previous character");
-				else
-					state = PARSER_STATE_RANGE_STARTED;
-			TOKEN_T(TYPE_CHAR)
-				char_vector_append_char(char_lis, token->value);
-			
-				PARSER_ERROR("Invalid token");
-			}
-
-		case PARSER_STATE_BRACKET_OPEN:
-			if(type == TOKEN_CLASS_COLON)
-				state = PARSER_STATE_CLASS_OPEN;
-			else if(type == TOKEN_CLASS_EQUALS)
-				state = PARSER_STATE_EQUIV_OPEN
-
+		}
 	}
+}
 
+enum tokenizer_state_t {
+	STATE_READING,
+	STATE_BRACKET_OPENED,
+	STATE_WAITING_BRACKET_CLOSE,
+	STATE_WAITING_CLASS_CLOSE,
+	STATE_WAITING_EQUIV_CLOSE
+};
 
+#define PUSH_TOKEN(type, value) token_stack_push(stack, token_new(type, value))
 
-
-
-
-token_t* tr_parser_next_token(const char **str) {
+void tr_parser_next_token(const char **str, tokenizer_state_t state, token_stack_t** stack) {
 	char c;
-	const char *str_pos;
-	token_t *token;
-	
-	if(!str || !(*str) || **str == '\0')
+	const char *str_pos = *str;
+		
+	if(!str || !(*str) || **str == '\0' || !stack || !(*stack))
 		return NULL;
 
-	token = (token_t*)malloc(sizeof(token_t));
-	if(!token)
-		return NULL;
-
-	str_pos = *str;
 	c = *str_pos;
 
-	// this is not in the switch because it is the only sequence that may 
-	// advance the position more than a single character
 	if(c == '\\') {
-		const char *new_pos = NULL;
-		str_pos++;
+		c = (*(++str_pos) == '\0') ? '\\' : tr_parser_unescape(str_pos, &str_pos);
 
-		// The string ends in a backslash
-		if(*str_pos == '\0') {
-			token->type = TOKEN_CHAR;
-			token->value = '\\';
-		} else {
-			c = tr_parser_unescape(str_pos, &new_pos);
+		// A bracket was previously opened, and we found an ordinary character.
+		// Therefore, a repetition was started
+		if(state == STATE_BRACKET_OPENED) {
+			PUSH_TOKEN(TOKEN_BRACKET_OPEN, 0));
 			
-			// didn't match an escape sequence, just use the next character
-			// unchanged
-			if(str_pos == new_pos)
-				c = *(str_pos++);
-			else
-				str_pos = new_pos;
-			
-			token->type = TOKEN_CHAR;
-			token->value = c;
+			state = STATE_WAITING_BRACKET_CLOSE;
 		}
+
+		PUSH_TOKEN(TOKEN_CHAR, c);
+		
+		// The position is already right, dont increment it.
+		return;
+	} else if (c == '[') {
+		state = STATE_BRACKET_OPENED;
+	
+	} else if (c == ':' && state == STATE_BRACKET_OPENED) {
+		PUSH_TOKEN(TOKEN_CLASS_START, 0);
+
+		state = STATE_WAITING_CLASS_CLOS;E
+	
+	} else if (c == '=' && state == STATE_BRACKET_OPENED) {
+		PUSH_TOKEN(TOKEN_EQUIV_START, 0);
+
+		state = STATE_WAITING_EQUIV_CLOSE;
+	
+	} else if (c == '*' && state == STATE_WAITING_BRACKET_CLOSE) {
+		PUSH_TOKEN(TOKEN_REPEAT_MARK, 0);
+	
+	} else if (c == '-') {
+		PUSH_TOKEN(TOKEN_RANGE_MARK, 0);
+
+	} else if (c == ']') {
+		if(state == STATE_WAITING_CLASS_CLOSE)
+			PUSH_TOKEN(TOKEN_CLASS_END, 0);
+	
+		else if(state == STATE_WAITING_EQUIV_CLOSE)
+			PUSH_TOKEN(TOKEN_EQUIV_END, 0);
+		
+		else if(state == STATE_WAITING_BRACKET_CLOSE)
+			PUSH_TOKEN(TOKEN_BRACKET_CLOSE, 0);
+
 	} else {
-		// match single-character tokens
-		switch(c) {
-		case '-': token->type = TOKEN_HYPHEN;        break;
-		case '[': token->type = TOKEN_BRACKET_OPEN;  break;
-		case ']': token->type = TOKEN_BRACKET_CLOSE; break;
-		case '=': token->type = TOKEN_EQUALS;        break;
-		case ':': token->type = TOKEN_COLON;         break;
-		case '*': token->type = TOKEN_ASTERISK;      break;
-		default:
-			if(isdigit(c))
-				token->type = TOKEN_NUMBER;
-			else
-				token->type = TOKEN_CHAR;
-		}
-
-		token->value = c;
-		str_pos++;
+		if(state == STATE_BRACKET_OPENED)
+			PUSH_TOKEN(TOKEN_BRACKET_OPEN, 0);
+		
+		if(isdigit(c))
+			PUSH_TOKEN(TOKEN_NUMERAL, c);
 	}
 
 	// update the position counter
-	*str = str_pos;
-	return token;
+	*str = (str_pos + 1);
+	return;
 }
+
+#undef PUSH_TOKEN
 
 token_stack_t* tr_parser_tokenize(const char *str)
 {
@@ -216,7 +204,7 @@ char tr_parser_unescape(const char *in, const char **out)
 		}
 	} while(octal_val[0] != '\0');
 
-	// no match found
-	*out = in;
-	return 0;
+	// no match found,, return the next char unchanged
+	*out = in + 1;
+	return c;
 }

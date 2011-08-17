@@ -3,10 +3,20 @@
 #include "utils.h"
 #include "token_stack.h"
 
+token_t* token_new(token_type_t type, int value) {
+	token_t* token = (token_t*)malloc(sizeof(token_t));
+	if(!token)
+		return NULL;
+
+	token->type = type;
+	token->value = value;
+
+	return token;
+}
+
 int token_stack_push(token_stack_t** head, token_t* token) {
 	token_stack_t* new_node;
 	
-
 	if(!head || !token)
 		return 0;
 
