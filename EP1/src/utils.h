@@ -14,4 +14,10 @@
 
 #define IS_POWER_OF_2(x) ((x) != 0 && ((x) & ((x)-1)) == 0)
 
+// Compile-time assertion macro.
+#define VERIFY(e) extern char (*ct_assert(void)) [sizeof(char[1 - 2*!(e)])]
+
+
+
+
 #endif // #ifndef TR_UTILS_H
