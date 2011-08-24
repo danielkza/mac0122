@@ -33,7 +33,11 @@
     <ClInclude Include="..\src\char_utils.h" />
     <ClInclude Include="..\src\char_vector.h" />
     <ClInclude Include="..\src\isblank.h" />
-    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_parser.h" />
+    <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\isblank.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
     <ClInclude Include="..\src\char_utils.h" />
@@ -60,24 +64,6 @@
     <ClInclude Include="..\src\tr_char_list.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
-    <ClInclude Include="..\src\char_utils.h" />
-    <ClInclude Include="..\src\char_vector.h" />
-    <ClInclude Include="..\src\isblank.h" />
-    <ClInclude Include="..\src\tr_char_list.h" />
-    <ClInclude Include="..\src\tr_parser.h" />
-    <ClInclude Include="..\src\utils.h" />
-    <ClInclude Include="..\src\char_utils.c" />
-    <ClInclude Include="..\src\char_vector.c" />
-    <ClInclude Include="..\src\isblank.c" />
-    <ClInclude Include="..\src\tr.c" />
-    <ClInclude Include="..\src\tr_char_list.c" />
-    <ClInclude Include="..\src\tr_parser.c" />
-    <ClInclude Include="..\src\char_utils.c" />
-    <ClInclude Include="..\src\char_vector.c" />
-    <ClInclude Include="..\src\isblank.c" />
-    <ClInclude Include="..\src\tr.c" />
-    <ClInclude Include="..\src\tr_char_list.c" />
-    <ClInclude Include="..\src\tr_parser.c" />
     <ClInclude Include="..\src\char_utils.c" />
     <ClInclude Include="..\src\char_vector.c" />
     <ClInclude Include="..\src\isblank.c" />
@@ -123,6 +109,18 @@
     <ClInclude Include="..\src\token_stack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\tr_char_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tr_char_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\getopt\getopt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\char_utils.c">
@@ -159,6 +157,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\token_stack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tr_char_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\getopt\getopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

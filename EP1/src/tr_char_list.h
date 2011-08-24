@@ -1,8 +1,36 @@
 #ifndef TR_CHAR_LIST_H
 #define TR_CHAR_LIST_H
 
+#include "char_vector.h"
+
+typedef enum {
+	TR_CHAR_LIST_ENTRY_CHARS,
+	TR_CHAR_LIST_ENTRY_REPETITION,
+	TR_CHAR_LIST_ENTRY_CLASS,
+	TR_CHAR_LIST_ENTRY_EQUIV
+} tr_char_list_entry_type_t;
+
+typedef struct {
+	char value;
+	size_t count;
+} tr_char_repetition_t;
+
+typedef struct {
+	char value;
+} tr_char_equivalence_t;
+
+typedef struct tr_char_list_entry_t {
+	tr_char_list_entry_type_t type;
+	
+	union {
+		char_vector_t *chars;
+		tr_char_repetition_t* repeat;
+		tr_char_equivalence_t* equiv;
+	}
+};
+
 typedef struct tr_char_list_t {
-	char*           list;
+	tr_char_list_entry_t* entry;
 	struct tr_char_list_t* next;
 } tr_char_list_t;
 

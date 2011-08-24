@@ -3,23 +3,29 @@
 
 #include "tr_char_list.h"
 
-tr_char_list_t* tr_char_list_new(char* list) {
+tr_char_list_t* tr_char_list_new() {
 	tr_char_list_t* head = (tr_char_list_t*)malloc(sizeof(tr_char_list_t));
 	if(!head)
 		return NULL;
 
-	head->list = list;
+	head->entry = NULL;
 	head->next = NULL;
 
 	return head;
 }
 
-tr_char_list_t* tr_char_list_insert(tr_char_list_t* node, char* list) {
+tr_char_list_t* tr_char_list_insert(tr_char_list_t* node, tr_char_list_entry_t* entry) {
 	tr_char_list_t* new_node;
+	
 	if(node == NULL)
 		return NULL;
 
-	new_node = tr_char_list_new(list);
+	if(node->entry != NULL) {
+		node->entry = entry;
+		return node;
+	}
+
+	new_node = tr_char_list_new();
 	if(new_node == NULL)
 		return NULL;
 
@@ -59,8 +65,8 @@ void tr_char_list_remove_free_next(tr_char_list_t* first) {
 	if(third)
 		first->next = third;
 	
-	if(second->list)
-		free(second->list);
+	if(second->entry)
+		free(second->entry);
 
 	free(second);
 }

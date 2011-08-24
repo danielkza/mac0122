@@ -14,19 +14,31 @@
     <ClCompile Include="..\src\char_classes.c" />
     <ClCompile Include="..\src\char_utils.c" />
     <ClCompile Include="..\src\char_vector.c" />
+    <ClCompile Include="..\src\getopt\getopt.c" />
     <ClCompile Include="..\src\isblank.c" />
     <ClCompile Include="..\src\token_stack.c" />
     <ClCompile Include="..\src\tr.c" />
+    <ClCompile Include="..\src\tr_char_list.c" />
     <ClCompile Include="..\src\tr_parser.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\char_classes.h" />
     <ClInclude Include="..\src\char_utils.h" />
     <ClInclude Include="..\src\char_vector.h" />
+    <ClInclude Include="..\src\getopt\getopt.h" />
     <ClInclude Include="..\src\isblank.h" />
     <ClInclude Include="..\src\token_stack.h" />
+    <ClInclude Include="..\src\tr.h" />
+    <ClInclude Include="..\src\tr_char_list.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D3D29FC-F498-4523-A963-115BDD2F1514}</ProjectGuid>
@@ -61,6 +73,7 @@
       <Optimization>Disabled</Optimization>
       <CompileAs>CompileAsC</CompileAs>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

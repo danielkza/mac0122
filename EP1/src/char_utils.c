@@ -23,8 +23,6 @@ size_t tr_strnlen(const char *str, size_t len)
 
 char * tr_strnchr(const char *str, int ch, size_t len)
 {
-	const char *str_end;
-
 	assert(ch >= CHAR_MIN && ch <= CHAR_MAX);
 
 	return (char *)memchr(str, (char)ch, len);
@@ -38,7 +36,6 @@ char * tr_strndup(const char *str, size_t len)
 
 		out = (char*)malloc(sizeof(char) * (len + 1));
 		if(out) {
-			// no need for further checks, we can just use memcpy
 			memcpy(out, str, len);
 			out[len] = '\0';
 		}
@@ -117,7 +114,7 @@ int tr_char_range_expand(char_vector_t* vec, int start, int end,
 	end_pos = memchr(collation_table, end, sizeof(collation_table));
 
 	if(!start_pos || !end_pos) {
-		tr_parser_error("range start or end not found on collation", NULL,
+		tr_parser_error(error_out, NULL, "range start or end not found on collation", NULL,
 		                error_out);
 		return 0;
 	} else if (end_pos < start_pos) {
