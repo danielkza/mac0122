@@ -188,9 +188,7 @@ wctype_t tr_parser_try_parse_class(const char **str,
 
 	wctype_t char_class;
 
-	//
-
-	if(!str || !*str || !out)
+	if(!str || !*str )
 		return 0;	
 
 	class_name_end = tr_parser_find_next_token(*str + 1, ":]");
@@ -228,7 +226,6 @@ int tr_parser_try_parse_equiv(const char **str, tr_parser_error_t* error_out)
 	const char *equiv_start, *equiv_end, *equiv_char_end;
 	int c;
 
-	//
 
 	if(!str || !*str)
 		return INVALID_CHAR;	
@@ -298,7 +295,7 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 		if (c == '-' && last_read_char != INVALID_CHAR) {
 			char current;
 
-			str_pos_tmp = str_pos+1;
+			str_pos_tmp = str_pos + 1;
 			
 			c = tr_parser_parse_one_char(&str_pos_tmp, error_out);
 			if(c != INVALID_CHAR) {
@@ -361,9 +358,12 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 
 				if(c != INVALID_CHAR) {
 					if(repeat_count) {
-						while(repeat_count--) {
-							char_vector_append_char(vec, c);
-						}
+						char_vector_append_char_repeat(vec, c, repeat_count);
+					} else if(indefinite_repeat_index >= 0) {
+						tr_parser_error(error_out, str_pos,
+							"repetitions of indefinite length must only appear"
+							" once in a set");
+						break;
 					} else {
 						char_vector_append_char(vec, c);
 						indefinite_repeat_index = vec->len - 1;
@@ -385,8 +385,31 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 	}
 
 	if(indefinite_repeat_index) {
-		char_vector_expand(vec, 
+		size_t old_length, repeat_count, i;
+		
+		if(!target_length) {
+			tr_parser_error(error_out, NULL, "indefinite repetition not valid "
+				                             "on the first set");
+			return 0;
+		}
 
+		// the vector already has the necessary length: if target_length was
+		// positive it was used as the initial size
+
+		old_length = vec->len;
+		repeat_count = target_length - old_length;
+
+		if(repeat_count > 0) {
+			size_t i;
+			for(i = 0; i < repeat_count; i++) {
+				vec->vector[old_length + indefinite_repeat_index +1] =
+					vec->vector[old_length + i] 
+		
+					strncpy
+		
+		
+		repeat_end = repeat_start + (target_length - eindefinite_repeat_index);
+		
 
 
 

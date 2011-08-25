@@ -80,13 +80,13 @@ int main(int argc, char* argv[])
 	setvbuf(stdin, NULL, _IOFBF, 512);
 	
 	if(opt_translate) {
-		tr_process_translate(opt_complement, opt_squeeze
+		tr_process_translate(opt_complement, opt_squeeze,
 			                 argv[option_index + 1], argv[option_index + 2]);
 	} else if(opt_delete) {
 		tr_process_delete(opt_complement, opt_squeeze,
-			              argv[option_index + 1]);
+			              argv[option_index + 1], argv[option_index + 2]]);
 	} else { // squeeze only
-		tr_process_squeeze(opt_complement, artv[option_index + 1]);
+		tr_process_squeeze(opt_complement, argv[option_index + 1]);
 	}
 
 	return 0;
