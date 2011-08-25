@@ -10,11 +10,10 @@
 
 #include "tr_parser.h"
 
-static int
-	opt_translate = 0,
-	opt_delete = 0,
-	opt_complement = 0,
-	opt_squeeze = 0; 
+static int opt_translate = 0,
+           opt_delete = 0,
+	       opt_complement = 0,
+	       opt_squeeze = 0; 
 
 int main(int argc, char* argv[])
 {
@@ -24,7 +23,7 @@ int main(int argc, char* argv[])
 	while(1) {
 		static struct option long_options[] = {
 			{"squeeze",         no_argument, NULL, 's'},
-			{"squeeze-repeats", no_argument, NULL, 's'}
+			{"squeeze-repeats", no_argument, NULL, 's'},
 			{"delete",          no_argument, NULL, 'd'},
 			{"complement",      no_argument, NULL, 'c'},
 			{0, 0, 0, 0}
@@ -93,110 +92,58 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-int tr_process_translate(int complement, int squeeze,
+void tr_process_translate(int complement, int squeeze,
 	                     const char* string1, const char* string2)
 {
 	int c, last;
-	size_t len, i;
-
-	while(1) {
-		size_t len;
-		if(ferror(stdin) || feof(stdin))
-			break;
-
-		len = fread(buffer, sizeof(char), sizeof(buffer) / sizeof(char), stdin);
-		if(!len)
-			break;
-
-		for(i = 0; i < len; i++) {
-			c = tr_translate_char(buffer[i], set1, set2);
+	
+	while((c = getchar()) != EOF) {
+		c = tr_translate_char(buffer[i], set1, set2);
 			
-			if(squeeze) {
-				if(tr_check_char(c, set2) == (!complement ? 1 : 0) &&
-				   last != INVALID_CHAR && last == c)
-				{
-					continue;
-				}
-			}
-
-			fputc(c, stdout);
-			last = c;
+		if(squeeze 
+		   && tr_check_char(c, set2) == (!complement ? 1 : 0)
+		   && last != INVALID_CHAR && last == c)
+		{
+			continue;
 		}
-	}
 
-	return 1;
+		putchar(c);
+		last = c;
+	}
 }
 
-int tr_process_delete(int complement, int squeeze,
-	                     const char* string1, const char* string2)
+void tr_process_delete(int complement, int squeeze,
+	                  const char* string1, const char* string2)
 {
-	char buffer[TR_BUFFER_SIZE];
 	int c, last;
-	size_t len, i;
 
-	while(1) {
-		size_t len;
-		if(ferror(stdin) || feof(stdin))
-			break;
+	while((c = getchar()) != EOF) {
+		if(tr_check_char(c, set1))
+			continue;
 
-		len = fread(buffer, sizeof(char), sizeof(buffer) / sizeof(char), stdin);
-		if(!len)
-			break;
-
-		for(i = 0; i < len; i++) {
-			if(squeeze) {
-				if(tr_check_char(c, set2) == (!complement ? 1 : 0) &&
-				   last != INVALID_CHAR && last == c)
-				{
-					continue;
-				}
-			}
+		if(squeeze
+		   && tr_check_char(c, set2) == (!complement ? 1 : 0)
+		   && last != INVALID_CHAR && last == c)
+		{
+			continue;
 		}
+	
+		putchar(c);
+		last = c;
 	}
-
-	return 1;
 }
 
+void tr_process_squeeze(int complement, const char* string1) {
+	int c, last;
 
-
-
-
-
-
-
-
-
-
-		int c = getc(stdin);
-		if(c == EOF)
-			break;
-
-
-
-
-
-
-
-
-}
-
-
-int tr_process_delete(int complement, int squeeze, const char* string1)
-{
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	while((c = getchar()) != EOF) {
+		if(tr_check_char(c, set1) == (!complement ? 1 : 0)
+		   && last != INVALID_CHAR && last == c)
+		{
+			continue;
+		}
+	
+		putchar(c);
+		last = c;
+	}
 }

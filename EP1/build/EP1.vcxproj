@@ -16,9 +16,8 @@
     <ClCompile Include="..\src\char_vector.c" />
     <ClCompile Include="..\src\getopt\getopt.c" />
     <ClCompile Include="..\src\isblank.c" />
-    <ClCompile Include="..\src\token_stack.c" />
     <ClCompile Include="..\src\tr.c" />
-    <ClCompile Include="..\src\tr_char_list.c" />
+    <ClCompile Include="..\src\tr_char_set.c" />
     <ClCompile Include="..\src\tr_parser.c" />
   </ItemGroup>
   <ItemGroup>
@@ -27,9 +26,8 @@
     <ClInclude Include="..\src\char_vector.h" />
     <ClInclude Include="..\src\getopt\getopt.h" />
     <ClInclude Include="..\src\isblank.h" />
-    <ClInclude Include="..\src\token_stack.h" />
     <ClInclude Include="..\src\tr.h" />
-    <ClInclude Include="..\src\tr_char_list.h" />
+    <ClInclude Include="..\src\tr_char_set.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
   </ItemGroup>

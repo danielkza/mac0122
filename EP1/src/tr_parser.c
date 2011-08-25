@@ -6,6 +6,8 @@
 #include <limits.h>
 #include <assert.h>
 #include <stdarg.h>
+#include <wchar.h>
+
 
 #include "utils.h"
 #include "char_utils.h"
@@ -18,7 +20,29 @@
 VERIFY(sizeof(int) > sizeof(char));
 static const int INVALID_CHAR = CHAR_MAX+1;
 
-void tr_parser_error(tr_parser_error_t* error_out, const char* err_pos, const char* err_fmt, ...)
+void tr_fatal_error(const char* err_fmt, ...) {
+	va_list ap;
+	va_start(ap, err_fmt);
+
+	if(vfprintf(stderr, err_fmt, ap) < 0) {
+		fputs(err_fmt, stderr);
+	}
+
+	va_end(ap);
+}
+
+int tr_parser_error_check(tr_parser_error_t* error_out) {
+	if(error_out) {
+		if(error_out->err_pos || error_out->msg)
+			return 1;
+	}
+
+	return 0;
+}
+
+
+void tr_parser_error(tr_parser_error_t* error_out, const char* err_pos,
+	                 const char* err_fmt, ...)
 {
 	va_list ap;
 	va_start(ap, err_fmt);
@@ -39,7 +63,8 @@ void tr_parser_error(tr_parser_error_t* error_out, const char* err_pos, const ch
 	va_end(ap);
 }
 
-void tr_parser_error_reset(tr_parser_error_t* error_out) {
+void tr_parser_error_reset(tr_parser_error_t* error_out)
+{
 	if(error_out) {
 		if(error_out->msg)
 			free(error_out->msg);
@@ -50,136 +75,189 @@ void tr_parser_error_reset(tr_parser_error_t* error_out) {
 	}
 }
 
-int tr_parser_try_parse_bracket_seq(const char **str, char_vector_t* out,
-	                                tr_parser_error_t* error_out)
+const char* tr_parser_find_next_token(const char *str, const char* token)
 {
-	char c;
-	
-	if(!str || !*str || !out)
-		return 0;
+	const char* token_pos;
 
-	c = **str;
-	if(c == '\0') {
-		return 0;
+	if(!token || *token == '\0')
+		return NULL;
 
-	} else if(c == ':') {
-		const char* class_name_end;
-		char* class_name;
-		ptrdiff_t class_name_len;
-
-		*str++;
-
-		class_name_end = *str;
-		do {
-			class_name_end = strchr(class_name_end, ':');
-		} while (class_name_end && (*(class_name_end-1) == '\\' || *(class_name_end+1) != ']'));
-
-		if(!class_name_end)
-			return 0;
-
-		class_name_len = (class_name_end - *str);
-			
-		if(class_name_len <= 0) {
-			tr_parser_error(error_out, *str, "missing character class name");
-			return 0;
-		}
+	token_pos = str;
+	while(token_pos) {
+		token_pos = strstr(token_pos, token);
 		
-		class_name = tr_strndup(*str, class_name_len));
-		if(class_name) {
-			wctype_t char_class = wctype(class_name);
-					
-			if(char_class) {
-				tr_char_class_expand(char_class, out);
-				*str = class_name_end + 2;
-			} else {
-				tr_parser_error(error_out, *str, "invalid character class `%s`", class_name);
-				
-				free(class_name);
-				return 0;
+		if(token_pos) {
+			const char* backslash_pos;
+			int backslash_count = 0;
+
+			// check for backslashes before the token possibly indicating it was
+			// escaped, and therefore we need to search further.
+			for(backslash_pos = token_pos - 1;
+				backslash_pos >= str && *backslash_pos == '\\';
+				backslash_pos--)
+			{
+				backslash_count++;
 			}
-
-			free(class_name);
-		}
-			
-	} else if(c == '=') {
-		const char *equiv_start, *equiv_end, *equiv_char_end;
-		equiv_start = equiv_end = (*str) + 1;
-
-		do {
-			equiv_end = strchr(equiv_end, '=');
-		} while(equiv_end && (*(equiv_end-1) == '\\' || *(equiv_end+1) != ']'));
-
-		if(!equiv_end)
-			return 0;
-
-		equiv_char_end = equiv_start;
-
-		c = tr_parser_parse_one_char(&equiv_char_end, error_out);
-		if(c == INVALID_CHAR) {
-			tr_parser_error(error_out, equiv_start, "missing equivalence class character");
-			return 0;
-		} else if (equiv_char_end != equiv_end) {
-			tr_parser_error(error_out, equiv_start,
-				            "`%*s` does not represent a single character for an equivalence class",
-							(int)(equiv_char_end - equiv_start), equiv_start);
-			return 0;
-		} else {
-			//char_vector_append_char_equiv(char_vector, c);
-			*str = equiv_end + 2;
-		}
-			
-	} else {
-		const char *repeat_start, *repeat_marker, *repeat_end;
-		char *repeat_count_str;
-		unsigned int repeat_count = 0;
-
-		repeat_marker = *str;
-		do {
-			repeat_marker = strchr(repeat_end, '*');
-		} while(repeat_marker && *(repeat_marker-1) == '\\');
-
-		if(!repeat_marker)
-			return 0;
-
-		repeat_end = repeat_marker + 1;
-		do {
-			repeat_end = strchr(repeat_end, ']');
-		} while(repeat_end && *(repeat_end-1) == '\\');
-
-		if(!repeat_end)
-			return 0;
 		
-		repeat_start = *str;
-
-		c = tr_parser_parse_one_char(&repeat_start, error_out);
-		if(c == INVALID_CHAR) {
-			tr_parser_error(error_out, repeat_start, "repetition with no character");
-			return 0;
+			// even number of backslashes actually means multiple literal 
+			// backslash characters, we're good.
+			if(backslash_count % 2 == 0)
+				break;
 		}
-
-		repeat_count_str = tr_strndup(repeat_marker+1, repeat_end - (repeat_marker+1));
-		if(!repeat_count_str) {
-			//FATAL_ERROR("out of memory");
-			return 0;
-		} else if (repeat_count_str[0] == '\0') {
-			repeat_count = 0;
-		} else {
-			char* repeat_count_str_end = NULL;
-			repeat_count = strtoul(repeat_count_str, &repeat_count_str_end, 0);
-			
-			// the repetition count should end right before the closing bracket
-			if(repeat_count_str_end != repeat_end) {
-				tr_parser_error(error_out, repeat_count_str, "invalid number of repetitions `%*s`",
-					            (int)(repeat_end - repeat_count_str), repeat_count_str);
-				return 0;
-			}
-		}
-
-		//char_vector_append_char_repetition(out, c, repeat_count);
-		*str = repeat_end + 1;
 	}
 
-	return 1;
+	return token_pos;
+}
+
+
+int tr_parser_try_parse_repeat(const char **str,
+							   int last_read_char,
+                               unsigned int *repeat_count,
+							   tr_parser_error_t* error_out)
+{
+	const char *repeat_start, *repeat_marker, *repeat_end;
+	char *repeat_count_str;
+	unsigned int repeat_count = 0;
+
+	int c;
+
+	if(!str || !*str || last_read_char == INVALID_CHAR)
+		return INVALID_CHAR;
+
+	// check for a valid repeat structure
+
+	repeat_marker = tr_parser_find_next_token(*str, "*");
+	if(!repeat_marker)
+		return INVALID_CHAR;
+
+	repeat_end = tr_parser_find_next_token(repeat_marker + 1, "]");
+	if(!repeat_end)
+		return INVALID_CHAR;
+		
+	repeat_start = *str;
+
+	c = tr_parser_parse_one_char(&repeat_start, error_out);
+	if(c == INVALID_CHAR) {
+		tr_parser_error(error_out, repeat_start, "repetition with no character");
+		return INVALID_CHAR;
+	}
+
+	// copy 0 or more characters that lie between the asterisk and the closing
+	// bracket.
+
+	repeat_count_str = tr_strndup(repeat_marker + 1,
+		                          repeat_end - (repeat_marker + 1));
+	if(!repeat_count_str) {
+		tr_fatal_error("out of memory");
+		return INVALID_CHAR;
+	}
+	
+	// no characters means an indefinite repetition, as does a repetition count
+	// of zero.
+	if (*repeat_count_str == '\0') {
+		*repeat_count = 0;
+	} else {
+		char* repeat_count_str_end = NULL;
+
+		*repeat_count = strtoul(repeat_count_str, &repeat_count_str_end, 0);
+			
+		// the repetition count should end right before the closing bracket
+		if(repeat_count_str_end != repeat_end) {
+			tr_parser_error(error_out, repeat_count_str,
+				            "invalid number of repetitions `%*s`",
+					        (int)(repeat_end - repeat_count_str),
+							repeat_count_str);
+
+			*repeat_count = 0;
+			return INVALID_CHAR;
+		}
+	}
+
+	*str = repeat_end + 1;
+	return c;
+}
+
+wctype_t tr_parser_try_parse_class(const char **str,
+	                               tr_parser_error_t* error_out)
+{
+	const char* str_pos;
+	
+	const char* class_name_end;
+	char* class_name;
+	ptrdiff_t class_name_len;
+
+	wctype_t char_class;
+
+	//
+
+	if(!str || !*str || !out)
+		return 0;	
+
+	class_name_end = tr_parser_find_next_token(*str + 1, ":]");
+	if(!class_name_end)
+		return 0;
+
+	class_name_len = (class_name_end - *str);
+	if(class_name_len <= 0) {
+		tr_parser_error(error_out, str_pos, "missing character class name");
+		return 0;
+	}
+		
+	class_name = tr_strndup(*str, class_name_len);
+	if(!class_name) {
+		tr_fatal_error("out of memory");
+		return 0;
+	}
+	
+	char_class = wctype(class_name);				
+	if(!char_class) {
+		tr_parser_error(error_out, str_pos, "invalid character class `%s`", class_name);
+				
+		free(class_name);
+		return 0;
+	}
+	
+	free(class_name);
+
+	*str = class_name_end + 2;
+	return char_class;
+}
+
+int tr_parser_try_parse_equiv(const char **str, tr_parser_error_t* error_out)
+{
+	const char *equiv_start, *equiv_end, *equiv_char_end;
+	int c;
+
+	//
+
+	if(!str || !*str)
+		return INVALID_CHAR;	
+
+	equiv_start = *str + 1;
+
+	equiv_end = tr_parser_find_next_token(equiv_start, "=]");
+	if(!equiv_end)
+		return INVALID_CHAR;
+
+	equiv_char_end = equiv_start;
+
+	c = tr_parser_parse_one_char(&equiv_char_end, error_out);
+	if(c == INVALID_CHAR) {
+		tr_parser_error(error_out, equiv_start, "missing equivalence class character");
+		return INVALID_CHAR;
+	}
+	
+	// there must be one and exactly one valid character in the equivalence
+	// class
+	if (equiv_char_end != equiv_end) {
+		tr_parser_error(error_out, equiv_start,
+				        "`%*s` does not represent a single character for an equivalence class",
+						(int)(equiv_char_end - equiv_start), equiv_start);
+		return INVALID_CHAR;
+	}
+
+	*str = equiv_end + 2;
+	return c;
 }
 
 char_vector_t* tr_parser_parse(const char *str, size_t target_length,
@@ -188,6 +266,7 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 	const char *str_pos;
 	
 	int c, last_read_char = INVALID_CHAR;
+	int indefinite_repeat_index = -1;
 
 	if(!str || *str == '\0')
 		return NULL;
@@ -205,12 +284,23 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 		return NULL;
 
 	for(str_pos = str; (c = *str_pos) != '\0'; ++str_pos) {
+		// each parsing attempt 'continue's if sucessfull, so the final part of
+		// the loop body only happens if no special meanings were parsed for
+		// the current position.
+
+		// a second temporary position counter for parsing attempts. It gets
+		// written back to str_pos on each iteration of not null.
+	
+		const char *str_pos_tmp = NULL;
+		
+		// parse a range specificator only if we have a valid character kept
+		// from the previous iterations	
 		if (c == '-' && last_read_char != INVALID_CHAR) {
 			char current;
 
-			str_pos++;
+			str_pos_tmp = str_pos+1;
 			
-			c = tr_parser_parse_one_char(&str_pos, error_out);
+			c = tr_parser_parse_one_char(&str_pos_tmp, error_out);
 			if(c != INVALID_CHAR) {
 				if(c < last_read_char) {
 					tr_parser_error(error_out, str_pos, 
@@ -218,21 +308,73 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 									last_read_char, c);
 					break;
 				}
-			}
+
+				for(current = last_read_char; current <= c; current++) 
+					char_vector_append_char(vec, current);
+
+				last_read_char = INVALID_CHAR;
+
+				str_pos = str_pos_tmp;
+				continue;
 			
-			for(current = last_read_char; current <= c; current++) 
-				char_vector_append_char(vec, current);
-
-			last_read_char = INVALID_CHAR;
-
-			continue;
+			} else if(tr_parser_error_check(error_out)) {
+				break;
+			}
 
 		} else if (c == '[') {
-			str_pos++;
-			if(!tr_parser_try_parse_bracket_seq(&str_pos, vec, error_out))
-				str_pos--;
-			else
-				continue;
+			str_pos_tmp = str_pos + 1;
+			c = *str_pos_tmp;
+
+			if(c == '\0') {
+				break;
+
+			// equivalence class
+			} else if(c == '=') {
+				str_pos_tmp++;
+				
+				c = tr_parser_try_parse_equiv(&str_pos_tmp, error_out);
+				if(c != INVALID_CHAR) {
+					tr_char_equiv_expand(vec, c);
+
+					str_pos = str_pos_tmp;
+					continue;
+				} else if (tr_parser_error_check(error_out)) {
+					break;
+				}
+
+			} else if(c == ':') {
+				wctype_t char_class = tr_parser_try_parse_class(&str_pos_tmp,
+					                                            error_out);
+
+				if(char_class) {
+					tr_char_class_expand(char_class, vec);
+
+					str_pos = str_pos_tmp;
+					continue;
+				} else if (tr_parser_error_check(error_out)) {
+					break;
+				}
+			} else {
+				size_t repeat_count;
+				c = tr_parser_try_parse_repeat(&str_pos_tmp, last_read_char,
+					                           &repeat_count, error_out);
+
+				if(c != INVALID_CHAR) {
+					if(repeat_count) {
+						while(repeat_count--) {
+							char_vector_append_char(vec, c);
+						}
+					} else {
+						char_vector_append_char(vec, c);
+						indefinite_repeat_index = vec->len - 1;
+					}
+
+					str_pos = str_pos_tmp;
+					continue;
+				} else if (tr_parser_error_check(error_out)) {
+					break;
+				}
+			}
 		}
 
 		c = tr_parser_parse_one_char(&str_pos, error_out);
@@ -242,7 +384,15 @@ char_vector_t* tr_parser_parse(const char *str, size_t target_length,
 		char_vector_append_char(vec, c);
 	}
 
-end:
+	if(indefinite_repeat_index) {
+		char_vector_expand(vec, 
+
+
+
+
+
+
+
 	if(vec)
 		free(vec);
 
