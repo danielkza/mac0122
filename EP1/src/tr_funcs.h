@@ -19,6 +19,6 @@ char* tr_char_printable_repr(unsigned char c);
 
 char tr_char_translate(char ch, const char_vector_t* set1,
 	                   const char_vector_t* set2, int complement);
-int tr_char_find_in_set(char ch, const char_vector_t* set);
+int tr_char_find_in_set(char ch, const char_vector_t* set, size_t *idx);
 
 #endif // #ifndef TR_TR_FUNCS_H

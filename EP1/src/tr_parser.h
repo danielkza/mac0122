@@ -2,6 +2,7 @@
 #define TR_TR_PARSER_H
 
 #include <stddef.h>
+#include <limits.h>
 
 #include "char_vector.h"
 

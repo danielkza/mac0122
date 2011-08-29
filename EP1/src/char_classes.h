@@ -1,9 +1,13 @@
 #ifndef TR_CHAR_CLASSES_H
 #define TR_CHAR_CLASSES_H
 
-#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+#if (__STDC_VERSION__ < 199901L)
 
-int isblank(int c);
+int tr_isblank(int c);
+
+#else
+
+#define tr_isblank isblank
 
 #endif
 

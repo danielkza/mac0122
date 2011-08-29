@@ -114,19 +114,22 @@ char * tr_char_printable_repr(unsigned char c) {
 	return ret;
 }
 
-int tr_char_find_in_set(char ch, const char_vector_t* set) {
+int tr_char_find_in_set(char ch, const char_vector_t* set, size_t *idx) {
 	size_t i;
 	if(set == NULL)
-		return -1;
+		return 0;
 
 	for(i = 0; i < set->len; i++) {
 		if(ch == set->vector[i]) {
+			if(idx != NULL)
+				*idx = i;
+
 			// set2 is short, so there's no correspondence
-			return i;
+			return 1;
 		}
 	}
 
-	return -1;
+	return 0;
 }
 
 char tr_char_translate(char ch, const char_vector_t* set1,
@@ -134,12 +137,11 @@ char tr_char_translate(char ch, const char_vector_t* set1,
 {
 	size_t idx;
 	if(set1 != NULL && set2 != NULL) {
-		idx = tr_char_find_in_set(ch, set1);
-
 		// Check if `ch` IS on set1 if complement is false,
 		// or if `ch`IS NOT on set1 if complement is true
-		if((complement ? idx == -1 : idx != -1)
-			&& set2->len > idx)
+
+		if(tr_char_find_in_set(ch, set1, &idx) == (!complement ? 1 : 0)
+		   && set2->len > idx)
 		{
 			return set2->vector[idx];
 		}

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#ifndef POSIX
+#ifdef _MSC_VER
 	#include "getopt/getopt.h"
 #else
 	#include <getopt.h>
@@ -144,7 +144,7 @@ void tr_process_translate(const char_vector_t* set1, const char_vector_t* set2,
 		c = tr_char_translate(c, set1, set2, complement);
 			
 		if(squeeze 
-		   && tr_char_find_in_set(c, set2) != -1
+		   && tr_char_find_in_set(c, set2, NULL)
 		   && last != INVALID_CHAR
 		   && last == c)
 		{
@@ -165,11 +165,11 @@ void tr_process_delete(const char_vector_t* set1, const char_vector_t* set2,
 		return;
 
 	while((c = getchar()) != EOF) {
-		if((tr_char_find_in_set(c, set1) != -1) == (!complement ? 1 : 0))
+		if(tr_char_find_in_set(c, set1, NULL) == (!complement ? 1 : 0))
 			continue;
 
 		if(squeeze
-		   && tr_char_find_in_set(c, set2) != -1
+		   && tr_char_find_in_set(c, set2, NULL)
 		   && last != INVALID_CHAR
 		   && last == c)
 		{
@@ -188,7 +188,7 @@ void tr_process_squeeze(const char_vector_t* set1, int complement) {
 		return;
 
 	while((c = getchar()) != EOF) {
-		if((tr_char_find_in_set(c, set1) != -1) == (!complement ? 1 : 0)
+		if(tr_char_find_in_set(c, set1, NULL) == (!complement ? 1 : 0)
 		   && last != INVALID_CHAR
 		   && last == c)
 		{
@@ -334,6 +334,11 @@ int main(int argc, char** argv)
 			           parser_error.msg, parser_error.err_pos);
 	}
 
+	if(!set1->len) {
+		tr_fatal_error("Failed to parse set1");
+	}
+
+
 	if(set2_necessary) {
 		string2 = argv[last_option_index + 1];
 		set2 = tr_parser_parse(string2, set1->len, &parser_error);
@@ -343,8 +348,20 @@ int main(int argc, char** argv)
 				           parser_error.msg, parser_error.err_pos);
 		}
 
+		if(!set2->len) {
+			tr_fatal_error("Failed to parse set2");
+		}
+
 		if(opt_truncate_set1) {
 			set1->len = set2->len;
+
+		} else if(set2->len < set1->len) {
+			char set2_last_char = set2->vector[set2->len - 1];
+			if(!char_vector_expand(set2, set1->len)) {
+				tr_fatal_error("memory allocation error\n");
+			}
+
+			tr_char_repeat_expand(set2_last_char, set1->len - set2->len, set2);
 		}
 	}
 

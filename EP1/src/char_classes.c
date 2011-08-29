@@ -6,9 +6,10 @@
 #include "utils.h"
 #include "char_classes.h"
 
-#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
+#if (__STDC_VERSION__ < 199901L)
 
-int isblank(int c) {
+int tr_isblank(int c)
+{
 	return c == ' ' || c == '\t';
 }
 
@@ -56,7 +57,7 @@ int char_class_check(int c, char_class_t char_class) {
 	case CC_ALPHA:
 		return isalpha(c);
 	case CC_BLANK:
-		return isblank(c);
+		return tr_isblank(c);
 	case CC_CNTRL:
 		return iscntrl(c);
 	case CC_DIGIT:
@@ -75,6 +76,8 @@ int char_class_check(int c, char_class_t char_class) {
 		return isupper(c);
 	case CC_XDIGIT:
 		return isxdigit(c);
+	case CC_INVALID:
+		break;
 	}
 
 	return 0;

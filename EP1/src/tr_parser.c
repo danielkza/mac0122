@@ -269,33 +269,6 @@ static int tr_parser_try_parse_equiv(const char **str,
 	return c;
 }
 
-							"repetitions of indefinite length must only appear"
-							" once in a set");
-						break;
-		
-		if(!target_length) {
-			tr_parser_error(error_out, NULL, "indefinite repetition not valid "
-				                             "on the first set");
-			return 0;
-		}
-
-		// the vector already has the necessary length: if target_length was
-		// positive it was used as the initial size
-
-		old_length = vec->len;
-		repeat_count = target_length - old_length;
-
-		if(repeat_count > 0) {
-			size_t i;
-			for(i = 0; i < repeat_count; i++) {
-				vec->vector[old_length + indefinite_repeat_index +1] =
-					vec->vector[old_length + i] 
-		
-					strncpy
-		
-		
-		repeat_end = repeat_start + (target_length - eindefinite_repeat_index);
-
 /* Interprets an espace sequence following a backslash into the correct
  * character.
  *
