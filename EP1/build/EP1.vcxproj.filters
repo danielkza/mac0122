@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\char_utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\char_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\isblank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\tr_parser.h">
@@ -53,27 +47,13 @@
     <ClInclude Include="..\src\char_utils.h" />
     <ClInclude Include="..\src\char_vector.h" />
     <ClInclude Include="..\src\isblank.h" />
-    <ClInclude Include="..\src\tr_char_list.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
     <ClInclude Include="..\src\char_utils.h" />
     <ClInclude Include="..\src\char_vector.h" />
     <ClInclude Include="..\src\isblank.h" />
-    <ClInclude Include="..\src\tr_char_list.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
-    <ClInclude Include="..\src\char_utils.c" />
-    <ClInclude Include="..\src\char_vector.c" />
-    <ClInclude Include="..\src\isblank.c" />
-    <ClInclude Include="..\src\tr.c" />
-    <ClInclude Include="..\src\tr_char_list.c" />
-    <ClInclude Include="..\src\tr_parser.c" />
-    <ClInclude Include="..\src\char_utils.c" />
-    <ClInclude Include="..\src\char_vector.c" />
-    <ClInclude Include="..\src\isblank.c" />
-    <ClInclude Include="..\src\tr.c" />
-    <ClInclude Include="..\src\tr_char_list.c" />
-    <ClInclude Include="..\src\tr_parser.c" />
     <ClInclude Include="..\src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -89,42 +69,36 @@
     <ClInclude Include="..\src\char_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\char_classes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\tr_char_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\tr_char_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\tr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\getopt\getopt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\tr_char_set.h">
+    <ClInclude Include="..\src\xmalloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tr_funcs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\strutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\char_classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\tr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\char_utils.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\char_vector.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\isblank.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\tr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\tr_parser.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\char_classes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\char_utils.c">
@@ -145,8 +119,21 @@
     <ClCompile Include="..\src\getopt\getopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\tr_char_set.c">
+    <ClCompile Include="..\src\xmalloc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\tr_funcs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\strutils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\char_classes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\test_input.txt" />
+    <None Include="..\src\test_output.txt" />
   </ItemGroup>
 </Project>

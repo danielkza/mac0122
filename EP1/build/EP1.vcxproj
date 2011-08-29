@@ -12,24 +12,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\char_classes.c" />
-    <ClCompile Include="..\src\char_utils.c" />
+    <ClCompile Include="..\src\strutils.c" />
     <ClCompile Include="..\src\char_vector.c" />
     <ClCompile Include="..\src\getopt\getopt.c" />
-    <ClCompile Include="..\src\isblank.c" />
     <ClCompile Include="..\src\tr.c" />
-    <ClCompile Include="..\src\tr_char_set.c" />
+    <ClCompile Include="..\src\tr_funcs.c" />
     <ClCompile Include="..\src\tr_parser.c" />
+    <ClCompile Include="..\src\xmalloc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\char_classes.h" />
-    <ClInclude Include="..\src\char_utils.h" />
+    <ClInclude Include="..\src\strutils.h" />
     <ClInclude Include="..\src\char_vector.h" />
     <ClInclude Include="..\src\getopt\getopt.h" />
-    <ClInclude Include="..\src\isblank.h" />
     <ClInclude Include="..\src\tr.h" />
-    <ClInclude Include="..\src\tr_char_set.h" />
+    <ClInclude Include="..\src\tr_funcs.h" />
     <ClInclude Include="..\src\tr_parser.h" />
     <ClInclude Include="..\src\utils.h" />
+    <ClInclude Include="..\src\xmalloc.h" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -37,6 +37,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\test_input.txt" />
+    <None Include="..\src\test_output.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2D3D29FC-F498-4523-A963-115BDD2F1514}</ProjectGuid>
@@ -64,14 +68,16 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>tr</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <CompileAs>CompileAsC</CompileAs>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
