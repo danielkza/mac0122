@@ -1,30 +1,25 @@
 CC = gcc
-CFLAGS = -O1 -Wall
+CFLAGS = -O1 -Wall -Wextra
 LDFLAGS =
 EXECUTABLE = tr
 SRCDIR = ./src
-OBJDIR = ../build
-
-VPATH=$(SRCDIR)
+OBJDIR = ./build
 
 SOURCES := $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c)))
-OBJS := $(SOURCES:.c=.o)
+OBJS := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
+
+VPATH = $(SRCDIR)
 
 all: $(OBJDIR)/$(EXECUTABLE)
 
-$(OBJDIR)/$(EXECUTABLE): $(addprefix $(OBJDIR)/, $(OBJS))
+$(OBJDIR)/$(EXECUTABLE): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
 
-$(OBJDIR)/$(OBJS): $(SOURCES)
+$(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	\rm *.o $(EXECUTABLE)
-
-.PHONY: show
-show:
-	echo $(SOURCES)
-	echo $(OBJS)
+	-rm -f $(OBJDIR)/*.o $(EXECUTABLE)
 
 
