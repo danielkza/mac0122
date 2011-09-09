@@ -45,4 +45,4 @@ _ReSharper*/
 ~$*
 
 *.o
-build/*.exe
+*/build/*.exe
