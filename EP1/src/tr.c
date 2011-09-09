@@ -358,7 +358,7 @@ int main(int argc, char** argv)
 		} else if(set2->len < set1->len) {
 			char set2_last_char = set2->vector[set2->len - 1];
 			if(!char_vector_expand(set2, set1->len)) {
-				tr_fatal_error("memory allocation error\n");
+				tr_fatal_error("amemory allocation error\n");
 			}
 
 			tr_char_repeat_expand(set2_last_char, set1->len - set2->len, set2);

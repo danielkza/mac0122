@@ -176,7 +176,7 @@ static int tr_parser_try_parse_repeat(const char **str,
 		// the repetition count should end right before the closing bracket
 		if(repeat_count_str_end != repeat_end) {
 			tr_parser_error(error_out, repeat_count_str,
-							"invalid number of repetitions `%*s`",
+							"invalid number of repetitions `%.*s`",
 							(int)(repeat_end - repeat_count_str),
 							repeat_count_str);
 
