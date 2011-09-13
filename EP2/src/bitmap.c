@@ -9,13 +9,16 @@
 /**
  * Creates a monochrome bitmap with the given width and height. 
  *
- * @param width Width of the bitmap
+ * @param width  Width of the bitmap
  * @param height Height of the bitmap
  *
  * @return Pointer to a bitmap struct, or a null pointer on failure
  */
 
-bitmap* bitmap_create(size_t width, size_t height) {
+bitmap*
+bitmap_create(size_t width,
+              size_t height)
+{
     bitmap* map = (bitmap*)malloc(sizeof *map);
     if(map != NULL) {    
         image_bit *bits = (image_bit*)calloc(sizeof(image_bit),
@@ -39,11 +42,16 @@ bitmap* bitmap_create(size_t width, size_t height) {
  * @param map   Pointer to a bitmap struct
  * @param x     0-based index of the bit on the x-axis
  * @param y     0-based index of the bit on the y-axis
- * @param value Value to set the bit to. 0 will unset the bit, any other value
- *              will set it
+ * @param value Value to set the bit to. 0 is the 'blank' value: any other
+ *              value is taken as filled, but wrote as-is
  */
 
-void bitmap_setbit(bitmap* map, size_t x, size_t y, image_bit value) {
+void
+bitmap_setbit(bitmap* map,
+              size_t x,
+              size_t y,
+              image_bit value)
+{
     if(map == NULL)
         return;
     
@@ -64,7 +72,11 @@ void bitmap_setbit(bitmap* map, size_t x, size_t y, image_bit value) {
  *         for a set bit
  */
 
-image_bit bitmap_getbit(bitmap* map, size_t x, size_t y) {
+image_bit
+bitmap_getbit(bitmap* map,
+              size_t x,
+              size_t y)
+{
     if(map == NULL)
         return 0;
     
@@ -85,11 +97,12 @@ image_bit bitmap_getbit(bitmap* map, size_t x, size_t y) {
  * 
  * @return Pointer to a new bitmap. Destroy it with bitmap_free when done using
  */
-bitmap* bitmap_copy_rect(bitmap* map,
-                         size_t start_x,
-                         size_t start_y,
-                         size_t width,
-                         size_t height)
+bitmap*
+bitmap_copy_rect(bitmap* map,
+                 size_t start_x,
+                 size_t start_y,
+                 size_t width,
+                 size_t height)
 {
     bitmap* new_map;
     image_bit *new_bits,
@@ -145,7 +158,8 @@ bitmap* bitmap_copy_rect(bitmap* map,
  * @return Pointer to a new bitmap. Destroy it with bitmap_free when done using
  */
 
-bitmap* bitmap_copy(bitmap* map)
+bitmap*
+bitmap_copy(bitmap* map)
 {
     bitmap* new_map;
     image_bit *bits;
@@ -189,7 +203,9 @@ bitmap* bitmap_copy(bitmap* map)
  *            effect. Otherwise, it will no longer be valid.
  */
 
-void bitmap_free(bitmap* map) {
+void
+bitmap_free(bitmap* map)
+{
     if(map != NULL) {
         if(map->bits != NULL)
             free(map->bits);
@@ -198,16 +214,91 @@ void bitmap_free(bitmap* map) {
     }
 }
 
+bitmap_print_char_table*
+bitmap_print_char_table_create(unsigned char start,
+                               size_t size)
+{
+    bitmap_print_char_table* table;
+    size_t i;
+    unsigned char c;
+    char* cur_str;
+
+    if(size == 0)
+        return NULL;
+
+    // Make sure to initialize the table with null pointers
+    table = (bitmap_print_char_table*)calloc(size+1, sizeof((*table)[0]));
+    if(table == NULL)
+        return NULL;
+
+
+    // Initialize the unset bit value 0 to an empty string
+    cur_str = (char*)malloc(1);
+    if(cur_str == NULL) {
+        free(table);
+        return NULL;
+    }
+
+    cur_str[0] = '\0';
+    (*table)[0] = cur_str;
+
+    // Actually fill the table starting from bit value 1
+    c = start;
+    for(i = 1; i < size; i++) {
+        cur_str = (char*)malloc(2);
+        if(cur_str == NULL) {
+            bitmap_print_char_table_free(table, size);
+            return NULL;
+        }
+
+        cur_str[0] = c;
+        cur_str[1] = '\0';
+        (*table)[i] = cur_str;
+
+        c++;
+    }
+
+    return table;
+}
+
+void
+bitmap_print_char_table_free(bitmap_print_char_table *table,
+                             size_t size)
+{
+    size_t i;
+    if(table == NULL || size == 0)
+        return;
+
+    for(i = 0; i < size; i++) {
+        free((*table)[i]);
+    }
+    
+    free(table);
+}
+
 /**
  * Prints a textual representation of a bitmap to an output stream.
  *
- * @param map       Pointer to a bitmap struct
- * @param outfile   Pointer to an output stream
- * @param unset_str String to print for unset bits
- * @param set_str   String to print for set bits
+ * @param map           Pointer to a bitmap struct
+ * @param outfile       Pointer to an output stream
+ * @param str_array     Pointer to an array of pointers to strings. Mapped by
+ *                      index in this array, each string will be printed when
+ *                      the curresponding bit value is found
+ * @param str_array_len Number of values present in str_array
+ * @param default_str   String to be used if a value has no correspondence in
+ *                      str_array
+ * @param padding_len   How many spaces to insert as padding between each
+ *                      printed bit
  */
 
-void bitmap_print(bitmap* map, FILE* outfile, char* unset_str, char* set_str) {
+void
+bitmap_print(bitmap* map,
+             FILE* outfile,
+             bitmap_print_char_table str_array,
+             size_t str_array_len,
+             char* default_str,
+             int padding_len)
+{
     size_t x, y;
     
     if(map == NULL || map->height == 0 || map->width == 0 || map->bits == NULL)
@@ -216,11 +307,21 @@ void bitmap_print(bitmap* map, FILE* outfile, char* unset_str, char* set_str) {
     if(outfile == NULL)
         return;
 
+    if(padding_len <= 0)
+        return;
+
     for(y = 0; y < map->height; y++) {
         for(x = 0; x < map->width; x++) {
-            fprintf(outfile, "%s ",
-                    map->bits[(y * map->width) + x] == 0 ? unset_str
-                                                         : set_str);
+            image_bit bit_value = bitmap_getbit(map, x, y);
+            char* bit_repr = default_str;
+
+            if(bit_value < str_array_len)
+                bit_repr = (*str_array)[bit_value];
+
+            if(bit_repr != NULL)
+                fprintf(outfile, "%*s", padding_len, bit_repr);
+            else
+                fprintf(outfile, "%*u", padding_len, (unsigned int)bit_value);
         }
 
         fprintf(outfile, "\n");
@@ -229,7 +330,9 @@ void bitmap_print(bitmap* map, FILE* outfile, char* unset_str, char* set_str) {
 
 
 /**
- * Parses on row of a bitmap from an input file.
+ * @internal
+ *
+ * Parses a row of a bitmap from an input file.
  *
  * @param infile   Pointer to an input stream to read from
  * @param bitmap   Pointer to a bitmap to store the data into
@@ -246,12 +349,13 @@ void bitmap_print(bitmap* map, FILE* outfile, char* unset_str, char* set_str) {
  * @return 1 on success, 0 on failure
  */                
 
-int bitmap_read_row(FILE* infile,
-                    bitmap* bitmap,
-                    size_t row_num,
-                    char* buf,
-                    int buf_size,
-                    char** buf_pos)
+static int
+bitmap_read_row__(FILE* infile,
+                  bitmap* bitmap,
+                  size_t row_num,
+                  char* buf,
+                  int buf_size,
+                  char** buf_pos)
 {
     size_t col_num;
     int buffer_exhausted;
@@ -329,7 +433,9 @@ int bitmap_read_row(FILE* infile,
  * @returns The fully constructed and read bitmap, or a null pointer on failure
  */
 
-bitmap* bitmap_read(FILE* infile) {
+bitmap*
+bitmap_read(FILE* infile)
+{
     size_t bitmap_width = 0, bitmap_height = 0,
            row_num = 0;
 
@@ -353,12 +459,12 @@ bitmap* bitmap_read(FILE* infile) {
         return NULL;
     }
 
-    // The buffer is not valid now, signal bitmap_read_row to fill it first
+    // The buffer is not valid now, signal bitmap_read_row__ to fill it first
     buf_pos = NULL;
 
     for(row_num = 0; row_num < bitmap_height; row_num++) {
-        if(!bitmap_read_row(infile, bitmap, row_num, buf, buf_size,
-                            &buf_pos))
+        if(!bitmap_read_row__(infile, bitmap, row_num, buf, buf_size,
+                              &buf_pos))
         {
             bitmap_free(bitmap);
 
@@ -367,140 +473,4 @@ bitmap* bitmap_read(FILE* infile) {
     }
 
     return bitmap;
-}
-
-int bitmap_find_region_scan_line(bitmap* map,
-                                 size_t start_x,
-                                 size_t start_y,
-                                 int delta_x,
-                                 int delta_y,
-                                 bitmap_region* region)
-{
-    size_t cur_x, cur_y;
-    size_t count;
-
-    if(map == NULL || region == NULL)
-        return 0;
-
-    if(start_x >= map->width || start_y >= map->height)
-        return 0;
-
-    // Ugly but necessary check: we need to start at an incremented position
-    // but can't allow unsigned underflow
-    if(delta_x < 0 && start_x < (unsigned)abs(delta_x)
-       || delta_y < 0 && start_y < (unsigned)abs(delta_y))
-    {
-        return 0;
-    }
-
-    cur_x = start_x + delta_x;
-    cur_y = start_y + delta_y;
-
-    count = 0;
-
-    // bitmap_getbit will return 0 if we exceed the upper bounds, but we must
-    // check the lower bound ourselves due to possible unsigned underflow
-    while(bitmap_getbit(map, cur_x, cur_y) == 1) {
-        count++;
-
-        if(delta_x < 0 && cur_x < (unsigned)abs(delta_x)
-           || delta_y < 0 && cur_y < (unsigned)abs(delta_y))
-        {
-            break;
-        }
-
-        cur_x += delta_x;
-        cur_y += delta_y;
-    }
-
-    return count;
-}
-
-void bitmap_find_region(bitmap* map,
-                       size_t start_x,
-                       size_t start_y,
-                       bitmap_region* region)
-{
-    struct {
-        int x, y;
-    } const deltas[] = {
-        {+1,  0},
-        {-1,  0},
-        { 0, +1},
-        { 0, -1},
-    };
-
-    size_t i;
-    bitmap_region* region_entry;
-
-
-    if(map == NULL || region == NULL)
-        return;
-
-    if(start_x >= map->width || start_y >= map->height)
-        return;
-    
-    // We use an optimized recursive approach to flood filling (finding a
-    // region):
-    // - We check if the starting bit itself is set. If it is not we have
-    //   nothing to do
-    // - If it is actually set, we unset the bit so it is not found again by 
-    //   any other calls.
-    // - We then walk in a 'cross' pattern around the starting bit, extending 
-    //   as further as possible on each direction. This works better than doing
-    //   another call for each pixel around us by splitting some of the
-    //   recursion into a linear loop, saving a significant amount of stack
-    //   space for large regions.
-
-    if(bitmap_getbit(map, start_x, start_y) == 0)
-        return;
-
-    bitmap_setbit(map, start_x, start_y, 0);
-
-    region_entry = (bitmap_region*)malloc(sizeof(*region_entry));
-    if(region_entry == NULL)
-        return;
-
-    region_entry->x = start_x;
-    region_entry->y = start_y;
-
-    linked_list_push(&(region_entry->list), &(region->list));
-
-    for(i = 0; i < sizeof(deltas) / sizeof(deltas[0]); i++) {
-        size_t scan_line_count, scan_cur;
-              
-        scan_line_count =
-        bitmap_find_region_scan_line(map, start_x, start_y,
-                                     deltas[i].x, deltas[i].y, region);
-
-        for(scan_cur = 1; scan_cur <= scan_line_count; scan_cur++) {
-            bitmap_find_region(map,
-                               start_x + (deltas[i].x * scan_cur),
-                               start_y + (deltas[i].y * scan_cur),
-                               region);
-        }
-    }
-
-    return;
-}
-
-bitmap* bitmap_from_region(bitmap_region* region,
-                           size_t orig_width,
-                           size_t orig_height)
-{
-    bitmap* new_map;
-    bitmap_region* cur_entry;
-
-    if(region == NULL || orig_width == 0 || orig_height == 0)
-        return NULL;
-    
-    new_map = bitmap_create(orig_width, orig_height);
-    if(new_map == NULL)
-        return NULL;
-
-    linked_list_foreach(cur_entry, &(region->list), bitmap_region) {
-        bitmap_setbit(new_map, cur_entry->x, cur_entry->y, 1);
-    }
-
-    return new_map;
 }

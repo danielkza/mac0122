@@ -5,28 +5,43 @@
 #include <ctype.h>
 
 #include "linked_list.h"
-#include "bitmap.h"
 
-void bitmap_region_free_func(void* region_entry) {
-    free(region_entry);
-}
+#include "bitmap.h"
+#include "bitmap_region.h"
 
 int main(int argc, char** argv)
 {
-    bitmap* cur_bitmap;
-    bitmap_region bitmap_region_head;
+    bitmap_print_char_table* print_table;
 
-    linked_list_init(&(bitmap_region_head.list));
+    bitmap *cur_bitmap, *in_proc_bitmap;
+    
+    bitmap_region cur_bitmap_region_point;
+    bitmap_region_list cur_bitmap_region;
+
+    print_table = bitmap_print_char_table_create('a', 26);
+
+    linked_list_init(&(cur_bitmap_region_point.list));
+    linked_list_init(&(cur_bitmap_region.list));
 
     for(;;) {
+        size_t cur_x, cur_y;
+
         cur_bitmap = bitmap_read(stdin);
         if(cur_bitmap == NULL)
             break;
 
-        printf("parsed bitmap:\n");
-        bitmap_print(cur_bitmap, stdout, "0", "1");
+        in_proc_bitmap = bitmap_copy(cur_bitmap);
+        if(in_proc_bitmap == NULL)
+            break;
 
-        bitmap_find_region(cur_bitmap, 0, 0, &bitmap_region_head);
+        printf("parsed bitmap:\n");
+        bitmap_print(cur_bitmap, stdout, print_table, 26+1, "U", 1);
+
+        for(cur_x = 0, cur_y = 0;
+            cur_x < cur_bitmap->width && cur_y < cur_bitmap->height;
+            cur_x++, cur_y++)
+        {
+            bitmap_find_region(cur_bitmap, 0, 0, &bitmap_region_head);
         if(!linked_list_empty(&(bitmap_region_head.list))) {
             bitmap* region_bitmap = bitmap_from_region(&bitmap_region_head,
                                                        cur_bitmap->width,

@@ -27,63 +27,57 @@ typedef struct  {
     image_bit* bits;
 } bitmap;
 
-/// Struct for representing an arbitrary connected region of points in a bitmap
-typedef struct {
-    /// Linked list entry for keep track of the following points
-    linked_list list;
-
-    /// Position of this point on the x-axis
-    size_t x;
-    /// Position of this point on the y-axis
-    size_t y;
-} bitmap_region;
+/// Table of strings that map to bit values for pretty-printing bitmaps
+typedef char* bitmap_print_char_table[];
 
 
-bitmap* bitmap_create(size_t width,
-                      size_t height);
+bitmap*
+bitmap_create(size_t width,
+              size_t height);
 
-void bitmap_setbit(bitmap* map,
-                   size_t x,
-                   size_t y,
-                   image_bit value);
+void
+bitmap_setbit(bitmap* map,
+              size_t x,
+              size_t y,
+              image_bit value);
 
-image_bit bitmap_getbit(bitmap* map,
-                        size_t x,
-                        size_t y);
+image_bit
+bitmap_getbit(bitmap* map,
+              size_t x,
+              size_t y);
 
-bitmap* bitmap_copy_region(bitmap* map,
-                           size_t start_x,
-                           size_t start_y,
-                           size_t width,
-                           size_t height);
+bitmap*
+bitmap_copy_region(bitmap* map,
+                   size_t start_x,
+                   size_t start_y,
+                   size_t width,
+                   size_t height);
 
-bitmap* bitmap_copy(bitmap* map);
+bitmap*
+bitmap_copy(bitmap* map);
 
 
-void bitmap_free(bitmap* map);
+void
+bitmap_free(bitmap* map);
 
-void bitmap_print(bitmap* map,
-                  FILE* outfile,
-                  char* unset_str,
-                  char* set_str);
+void
+bitmap_print(bitmap* map,
+             FILE* outfile,
+             bitmap_print_char_table* str_table,
+             size_t str_table_len,
+             char* default_str,
+             int padding_len);
 
-int bitmap_read_row(FILE* infile,
-                    bitmap* bitmap,
-                    size_t row_num,
-                    char* buf,
-                    int buf_size,
-                    char** buf_pos);
+bitmap_print_char_table*
+bitmap_print_char_table_create(unsigned char start,
+                               size_t size);
+
+void
+bitmap_print_char_table_free(bitmap_print_char_table *table,
+                             size_t size);
 
 bitmap* bitmap_read(FILE* infile);
 
-void bitmap_find_region(bitmap* map,
-                        size_t start_x,
-                        size_t start_y,
-                        bitmap_region* region);
-
-bitmap* bitmap_from_region(bitmap_region* region,
-                           size_t orig_width,
-                           size_t orig_height);
 
 #endif // BITMAP_H
 
