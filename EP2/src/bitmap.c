@@ -214,25 +214,18 @@ bitmap_free(bitmap* map)
     }
 }
 
-bitmap_print_char_table*
-bitmap_print_char_table_create(unsigned char start,
-                               size_t size)
+bitmap_print_table*
+bitmap_print_table_create_alpha(void)
 {
-    bitmap_print_char_table* table;
+    bitmap_print_table* table;
     size_t i;
     unsigned char c;
     char* cur_str;
 
-    if(size == 0)
-        return NULL;
-
-    // Make sure to initialize the table with null pointers
-    table = (bitmap_print_char_table*)calloc(size+1, sizeof((*table)[0]));
+    table = (bitmap_print_table*)calloc(sizeof(bitmap_print_table), (26+2));
     if(table == NULL)
         return NULL;
 
-
-    // Initialize the unset bit value 0 to an empty string
     cur_str = (char*)malloc(1);
     if(cur_str == NULL) {
         free(table);
@@ -240,40 +233,57 @@ bitmap_print_char_table_create(unsigned char start,
     }
 
     cur_str[0] = '\0';
-    (*table)[0] = cur_str;
+
+    table[0].bit_value = 0;
+    table[0].repr = cur_str;
 
     // Actually fill the table starting from bit value 1
-    c = start;
-    for(i = 1; i < size; i++) {
+    for(i = 1, c = 'a';
+        i <= 26;
+        i++, c++)
+    {
         cur_str = (char*)malloc(2);
         if(cur_str == NULL) {
-            bitmap_print_char_table_free(table, size);
+            bitmap_print_table_free(table);
             return NULL;
         }
 
         cur_str[0] = c;
         cur_str[1] = '\0';
-        (*table)[i] = cur_str;
-
-        c++;
+        table[i].repr = cur_str;
     }
 
+    table[i].repr = NULL;
     return table;
 }
 
 void
-bitmap_print_char_table_free(bitmap_print_char_table *table,
-                             size_t size)
+bitmap_print_table_free(bitmap_print_table *table)
+{
+    if(table != NULL) { 
+        size_t i;
+        for(i = 0; table[i].repr != NULL; i++) {
+           free(table[i].repr);
+        }
+    
+        free(table);
+    }
+}
+
+char*
+bitmap_print_table_find(bitmap_print_table* table, 
+                        image_bit value)
 {
     size_t i;
-    if(table == NULL || size == 0)
-        return;
+    if(table == NULL)
+        return NULL;
 
-    for(i = 0; i < size; i++) {
-        free((*table)[i]);
+    for(i = 0; table[i].repr != NULL; i++) {
+        if(table[i].bit_value == value)
+            return table[i].repr;
     }
-    
-    free(table);
+
+    return NULL;
 }
 
 /**
@@ -281,10 +291,8 @@ bitmap_print_char_table_free(bitmap_print_char_table *table,
  *
  * @param map           Pointer to a bitmap struct
  * @param outfile       Pointer to an output stream
- * @param str_array     Pointer to an array of pointers to strings. Mapped by
- *                      index in this array, each string will be printed when
- *                      the curresponding bit value is found
- * @param str_array_len Number of values present in str_array
+ * @param print_table   Pointer to an array of bitmap_print_table entries
+ *                      containing textual represenatations for bit values
  * @param default_str   String to be used if a value has no correspondence in
  *                      str_array
  * @param padding_len   How many spaces to insert as padding between each
@@ -294,8 +302,7 @@ bitmap_print_char_table_free(bitmap_print_char_table *table,
 void
 bitmap_print(bitmap* map,
              FILE* outfile,
-             bitmap_print_char_table str_array,
-             size_t str_array_len,
+             bitmap_print_table print_table,
              char* default_str,
              int padding_len)
 {
@@ -304,7 +311,7 @@ bitmap_print(bitmap* map,
     if(map == NULL || map->height == 0 || map->width == 0 || map->bits == NULL)
         return;
 
-    if(outfile == NULL)
+    if(outfile == NULL || print_table == NULL || default_str == NULL)
         return;
 
     if(padding_len <= 0)
@@ -313,10 +320,9 @@ bitmap_print(bitmap* map,
     for(y = 0; y < map->height; y++) {
         for(x = 0; x < map->width; x++) {
             image_bit bit_value = bitmap_getbit(map, x, y);
-            char* bit_repr = default_str;
-
-            if(bit_value < str_array_len)
-                bit_repr = (*str_array)[bit_value];
+            char* bit_repr = bitmap_print_table_find(print_table, bit_value);
+            if(bit_repr == NULL)
+               bit_repr = default_str;
 
             if(bit_repr != NULL)
                 fprintf(outfile, "%*s", padding_len, bit_repr);

@@ -6,6 +6,48 @@
 #include "bitmap.h"
 #include "bitmap_region.h"
 
+bitmap_region*
+bitmap_region_create(void)
+{
+    bitmap_region* head = (bitmap_region*)malloc(sizeof(*head));
+    if(head != NULL)
+        linked_list_init(&(head->list));
+
+    return head;
+}
+
+void
+bitmap_region_free(bitmap_region* region)
+{
+    if(region != NULL) {
+        linked_list_free_items(&(region->list), bitmap_region, free);
+        free(region);
+    }
+}
+
+bitmap_region_list*
+bitmap_region_list_create(void)
+{
+    bitmap_region_list* head = (bitmap_region_list*)malloc(sizeof(*head));
+    if(head != NULL)
+        linked_list_init(&(head->list));
+
+    return head;
+}
+
+void
+bitmap_region_list_free(bitmap_region_list* region_list)
+{
+    bitmap_region_list *iter, *next;
+    linked_list_foreach_safe(iter, next, &(region_list->list),
+                             bitmap_region_list)
+    {
+        bitmap_region_free(iter->region);
+    }
+    
+    linked_list_free_items(&(region_list->list), bitmap_region_list, free);
+}
+
 static int
 bitmap_find_region_scan_line__(bitmap* map,
                                size_t start_x,
@@ -58,27 +100,13 @@ void
 bitmap_find_region(bitmap* map,
                    size_t start_x,
                    size_t start_y,
-                   bitmap_region* region)
+                   bitmap_region* region,
+                   const bitmap_region_search* search)
 {
-    struct {
-        int x, y;
-    } const deltas[] = {
-        {+1,  0}, // right>
-        {-1,  0}, // left
-        { 0, +1}, // up
-        { 0, -1}, // down
-        /*
-        {+1, +1}, // you can figure out the rest
-        {+1, -1},
-        {-1, +1},
-        {-1, -1},
-        */
-    };
-
     size_t i;
     bitmap_region* region_entry;
 
-    if(map == NULL || region == NULL)
+    if(map == NULL || region == NULL || search == NULL)
         return;
 
     if(start_x >= map->width || start_y >= map->height)
@@ -112,18 +140,18 @@ bitmap_find_region(bitmap* map,
 
     linked_list_push(&(region_entry->list), &(region->list));
 
-    for(i = 0; i < sizeof(deltas) / sizeof(deltas[0]); i++) {
+    for(i = 0; search[i].x != 0 || search[i].y != 0; i++) {
         size_t scan_line_count, scan_cur;
               
         scan_line_count =
         bitmap_find_region_scan_line__(map, start_x, start_y,
-                                       deltas[i].x, deltas[i].y, region);
+                                       search[i].x, search[i].y, region);
 
         for(scan_cur = 1; scan_cur <= scan_line_count; scan_cur++) {
             bitmap_find_region(map,
-                               start_x + (deltas[i].x * scan_cur),
-                               start_y + (deltas[i].y * scan_cur),
-                               region);
+                               start_x + (search[i].x * scan_cur),
+                               start_y + (search[i].y * scan_cur),
+                               region, search);
         }
     }
 
@@ -133,10 +161,10 @@ bitmap_find_region(bitmap* map,
 bitmap_region_list*
 bitmap_find_all_regions(bitmap* map)
 {
-    bitmap *map_copy;
+    bitmap *map_copy = NULL;
     
     bitmap_region      *region_head = NULL;
-    bitmap_region_list *region_list_head, *region_list_entry;
+    bitmap_region_list *region_list_head = NULL, *region_list_entry = NULL;
 
     size_t cur_x, cur_y;
 
@@ -170,7 +198,9 @@ bitmap_find_all_regions(bitmap* map)
                    goto error_cleanup;
             }
             
-            bitmap_find_region(map_copy, cur_x, cur_y, region_head);
+            bitmap_find_region(map_copy, cur_x, cur_y, region_head, 
+                               BITMAP_SEARCH_RIGHT_DOWN);
+
             if(linked_list_empty(&(region_head->list)))
                 continue;
 
@@ -207,48 +237,6 @@ end:
         bitmap_free(map_copy);
 
     return NULL;
-}
-
-bitmap_region*
-bitmap_region_create()
-{
-    bitmap_region* head = (bitmap_region*)malloc(sizeof(*head));
-    if(head != NULL)
-        linked_list_init(&(head->list));
-
-    return head;
-}
-
-void
-bitmap_region_free(bitmap_region* region)
-{
-    if(region != NULL) {
-        linked_list_free_items(&(region->list), bitmap_region, free);
-        free(region);
-    }
-}
-
-bitmap_region_list*
-bitmap_region_list_create()
-{
-    bitmap_region_list* head = (bitmap_region_list*)malloc(sizeof(*head));
-    if(head != NULL)
-        linked_list_init(&(head->list));
-
-    return head;
-}
-
-void
-bitmap_region_list_free(bitmap_region_list* region_list)
-{
-    bitmap_region_list *iter, *next;
-    linked_list_foreach_safe(iter, next, &(region_list->list),
-                             bitmap_region_list)
-    {
-        bitmap_region_free(iter->region);
-    }
-    
-    linked_list_free_items(&(region_list->list), bitmap_region_list, free);
 }
 
 bitmap*

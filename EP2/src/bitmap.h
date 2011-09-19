@@ -28,8 +28,10 @@ typedef struct  {
 } bitmap;
 
 /// Table of strings that map to bit values for pretty-printing bitmaps
-typedef char* bitmap_print_char_table[];
-
+typedef struct {
+    image_bit bit_value;
+    char* repr;
+} bitmap_print_table;
 
 bitmap*
 bitmap_create(size_t width,
@@ -56,28 +58,27 @@ bitmap_copy_region(bitmap* map,
 bitmap*
 bitmap_copy(bitmap* map);
 
-
 void
 bitmap_free(bitmap* map);
 
 void
 bitmap_print(bitmap* map,
              FILE* outfile,
-             bitmap_print_char_table* str_table,
-             size_t str_table_len,
+             bitmap_print_table* print_table,
              char* default_str,
              int padding_len);
 
-bitmap_print_char_table*
-bitmap_print_char_table_create(unsigned char start,
-                               size_t size);
+bitmap_print_table*
+bitmap_print_table_create_alpha(void);
+
+char*
+bitmap_print_table_find(bitmap_print_table* table,
+                        image_bit value);
 
 void
-bitmap_print_char_table_free(bitmap_print_char_table *table,
-                             size_t size);
+bitmap_print_table_free(bitmap_print_table *table);
 
 bitmap* bitmap_read(FILE* infile);
 
 
 #endif // BITMAP_H
-
