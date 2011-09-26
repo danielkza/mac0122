@@ -1,0 +1,184 @@
+\hypertarget{bitmap_8h}{
+\section{bitmap.h File Reference}
+\label{bitmap_8h}\index{bitmap.h@{bitmap.h}}
+}
+
+
+Functions and structures for representing and manipulating bit matrixes.  
+
+
+{\ttfamily \#include $<$stddef.h$>$}\par
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structbitmap}{bitmap}
+\begin{DoxyCompactList}\small\item\em Type for a matrix of bits. \end{DoxyCompactList}\item 
+struct \hyperlink{structbitmap__region}{bitmap\_\-region}
+\begin{DoxyCompactList}\small\item\em Type representing a connected region of points in a bitmap. \end{DoxyCompactList}\item 
+struct \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list}
+\begin{DoxyCompactList}\small\item\em Type representing a list of multiple bitmap\_\-region's. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{
+typedef unsigned char \hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit}}
+\label{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}
+
+\begin{DoxyCompactList}\small\item\em Type representing a single bit in an image matrix. \end{DoxyCompactList}\item 
+\hypertarget{bitmap_8h_ae6f3ec946427d08884171ed71a3a633f}{
+typedef struct \hyperlink{structbitmap__region}{bitmap\_\-region} \hyperlink{bitmap_8h_ae6f3ec946427d08884171ed71a3a633f}{bitmap\_\-region}}
+\label{bitmap_8h_ae6f3ec946427d08884171ed71a3a633f}
+
+\begin{DoxyCompactList}\small\item\em Type representing a connected region of points in a bitmap. \end{DoxyCompactList}\item 
+\hypertarget{bitmap_8h_a0370d51ec1faf14f5079fcf4e2cae0a9}{
+typedef struct \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} \hyperlink{bitmap_8h_a0370d51ec1faf14f5079fcf4e2cae0a9}{bitmap\_\-region\_\-list}}
+\label{bitmap_8h_a0370d51ec1faf14f5079fcf4e2cae0a9}
+
+\begin{DoxyCompactList}\small\item\em Type representing a list of multiple bitmap\_\-region's. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit} \hyperlink{bitmap_8h_a581e62048e77231d6e792c3481e4679a}{bitmap\_\-getbit} (const \hyperlink{structbitmap}{bitmap} $\ast$map, int x, int y)
+\begin{DoxyCompactList}\small\item\em Retrieves the value of a single bit from a bitmap. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a96cb4116f6302d8e554b94b0e12a41a5}{bitmap\_\-setbit} (\hyperlink{structbitmap}{bitmap} $\ast$map, int x, int y, \hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit} value)
+\begin{DoxyCompactList}\small\item\em Sets the value of a single bit from a bitmap. \end{DoxyCompactList}\item 
+\hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$ \hyperlink{bitmap_8h_aa1d7a097132b1f416722e5e46c3b4e21}{bitmap\_\-find\_\-all\_\-regions} (\hyperlink{structbitmap}{bitmap} $\ast$map)
+\begin{DoxyCompactList}\small\item\em Retrieves a list of all the connected regions from a bitmap. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{bitmap_8h_aa254e2f18dcd08813e2844b4760d20fd}{bitmap\_\-regions\_\-print} (const \hyperlink{structbitmap}{bitmap} $\ast$map, const \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$regions)
+\begin{DoxyCompactList}\small\item\em Generates the string representation of multiple regions on a matrix. \end{DoxyCompactList}\item 
+\hyperlink{structbitmap}{bitmap} $\ast$ \hyperlink{bitmap_8h_a16d899c642d1dca0adc01878dde19b2d}{bitmap\_\-read} (FILE $\ast$infile)
+\begin{DoxyCompactList}\small\item\em Reads a bitmap from a file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions and structures for representing and manipulating bit matrixes. \begin{DoxyAuthor}{Author}
+Daniel Miranda 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\hypertarget{bitmap_8h_aa1d7a097132b1f416722e5e46c3b4e21}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-find\_\-all\_\-regions@{bitmap\_\-find\_\-all\_\-regions}}
+\index{bitmap\_\-find\_\-all\_\-regions@{bitmap\_\-find\_\-all\_\-regions}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-find\_\-all\_\-regions}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bitmap\_\-region\_\-list}$\ast$ bitmap\_\-find\_\-all\_\-regions (
+\begin{DoxyParamCaption}
+\item[{{\bf bitmap} $\ast$}]{map}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_aa1d7a097132b1f416722e5e46c3b4e21}
+
+
+Retrieves a list of all the connected regions from a bitmap. 
+
+\begin{DoxyWarning}{Warning}
+This function is destructive: the bitmap will be completely zero-\/ed out after all regions are found
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em map} & The bitmap to use\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the first item of the list of regions, or NULL on error 
+\end{DoxyReturn}
+\hypertarget{bitmap_8h_a581e62048e77231d6e792c3481e4679a}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-getbit@{bitmap\_\-getbit}}
+\index{bitmap\_\-getbit@{bitmap\_\-getbit}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-getbit}]{\setlength{\rightskip}{0pt plus 5cm}{\bf image\_\-bit} bitmap\_\-getbit (
+\begin{DoxyParamCaption}
+\item[{const {\bf bitmap} $\ast$}]{map, }
+\item[{int}]{x, }
+\item[{int}]{y}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_a581e62048e77231d6e792c3481e4679a}
+
+
+Retrieves the value of a single bit from a bitmap. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em map} & The bitmap to use \\
+\hline
+{\em x} & 0-\/base coordinate of the bit in the x-\/axis \\
+\hline
+{\em y} & 0-\/base coordinate of the bit in the y-\/axis\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the bit, or 0 if the coordinates are out of range 
+\end{DoxyReturn}
+\hypertarget{bitmap_8h_a16d899c642d1dca0adc01878dde19b2d}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-read@{bitmap\_\-read}}
+\index{bitmap\_\-read@{bitmap\_\-read}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bitmap}$\ast$ bitmap\_\-read (
+\begin{DoxyParamCaption}
+\item[{FILE $\ast$}]{infile}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_a16d899c642d1dca0adc01878dde19b2d}
+
+
+Reads a bitmap from a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em infile} & Input stream\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The read bitmap or NULL on error 
+\end{DoxyReturn}
+\hypertarget{bitmap_8h_aa254e2f18dcd08813e2844b4760d20fd}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-regions\_\-print@{bitmap\_\-regions\_\-print}}
+\index{bitmap\_\-regions\_\-print@{bitmap\_\-regions\_\-print}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-regions\_\-print}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ bitmap\_\-regions\_\-print (
+\begin{DoxyParamCaption}
+\item[{const {\bf bitmap} $\ast$}]{map, }
+\item[{const {\bf bitmap\_\-region\_\-list} $\ast$}]{regions}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_aa254e2f18dcd08813e2844b4760d20fd}
+
+
+Generates the string representation of multiple regions on a matrix. 
+
+The letter representing each regions starts at 'a'.
+
+
+\begin{DoxyParams}{Parameters}
+{\em map} & The bitmap to use \\
+\hline
+{\em regions} & The list of regions (obtained with bitmap\_\-find\_\-all\_\-regions)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to a string. free() it after you're done. 
+\end{DoxyReturn}
+\hypertarget{bitmap_8h_a96cb4116f6302d8e554b94b0e12a41a5}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-setbit@{bitmap\_\-setbit}}
+\index{bitmap\_\-setbit@{bitmap\_\-setbit}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-setbit}]{\setlength{\rightskip}{0pt plus 5cm}void bitmap\_\-setbit (
+\begin{DoxyParamCaption}
+\item[{{\bf bitmap} $\ast$}]{map, }
+\item[{int}]{x, }
+\item[{int}]{y, }
+\item[{{\bf image\_\-bit}}]{value}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_a96cb4116f6302d8e554b94b0e12a41a5}
+
+
+Sets the value of a single bit from a bitmap. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em map} & The bitmap to use \\
+\hline
+{\em x} & 0-\/base coordinate of the bit in the x-\/axis \\
+\hline
+{\em y} & 0-\/base coordinate of the bit in the y-\/axis \\
+\hline
+{\em value} & The new value to attribute to the bit \\
+\hline
+\end{DoxyParams}

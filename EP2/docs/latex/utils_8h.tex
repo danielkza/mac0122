@@ -1,0 +1,134 @@
+\hypertarget{utils_8h}{
+\section{utils.h File Reference}
+\label{utils_8h}\index{utils.h@{utils.h}}
+}
+
+
+General utility functions.  
+
+
+{\ttfamily \#include $<$stdlib.h$>$}\par
+{\ttfamily \#include $<$stdio.h$>$}\par
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{utils_8h_a6ce9a1b6d0aa27fcec4ff8bd58e42435}{linked\_\-list\_\-free}(list, type, next\_\-member)
+\begin{DoxyCompactList}\small\item\em Iterates through a linked list free()'ing all it's items. \end{DoxyCompactList}\item 
+\#define \hyperlink{utils_8h_aafe56689203de0048b842ea1c018cfe4}{linked\_\-list\_\-foreach}(list, iter, iter\_\-next, next\_\-member)
+\begin{DoxyCompactList}\small\item\em Macro for iterating through a linked list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+General utility functions. \begin{DoxyAuthor}{Author}
+Daniel Miranda 
+\end{DoxyAuthor}
+
+
+\subsection{Define Documentation}
+\hypertarget{utils_8h_aafe56689203de0048b842ea1c018cfe4}{
+\index{utils.h@{utils.h}!linked\_\-list\_\-foreach@{linked\_\-list\_\-foreach}}
+\index{linked\_\-list\_\-foreach@{linked\_\-list\_\-foreach}!utils.h@{utils.h}}
+\subsubsection[{linked\_\-list\_\-foreach}]{\setlength{\rightskip}{0pt plus 5cm}\#define linked\_\-list\_\-foreach(
+\begin{DoxyParamCaption}
+\item[{}]{list, }
+\item[{}]{iter, }
+\item[{}]{iter\_\-next, }
+\item[{}]{next\_\-member}
+\end{DoxyParamCaption}
+)}}
+\label{utils_8h_aafe56689203de0048b842ea1c018cfe4}
+{\bfseries Value:}
+\begin{DoxyCode}
+for(iter = list, iter_next = (list != NULL) ? list->next_member \
+                                                : NULL; \
+        iter != NULL; \
+        iter = iter_next, iter_next = (iter_next != NULL) ? \
+                                      iter_next->next_member : NULL \
+    )
+\end{DoxyCode}
+
+
+Macro for iterating through a linked list. 
+
+Use it where you would include a for loop, following it with an opening bracket, your code, and a matching closing bracket.
+
+Example of use:
+
+
+\begin{DoxyCode}
+ typedef struct my_list {
+     int n;
+     struct my_list *next;
+ } my_list;
+ 
+ my_list *head, *tail, *list_cur, *list_next;
+ int i;
+ 
+ for(i = 0; i < 100; i++) {
+     my_list* item = malloc(sizeof(*item));
+
+     item->n = i;
+     item->next = NULL;
+
+     if(head == NULL)
+         head = item;
+     else if(tail != NULL)
+         tail->next = item;
+
+     tail = item;
+  }
+  
+ linked_list_foreach(head, list_cur, list_next, next) {
+     printf("%d\n", list_cur->n);
+ }
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to the first node of the list \\
+\hline
+{\em iter} & A variable with the type of a pointer to a list node, that will receive the current node during the iteration \\
+\hline
+{\em iter\_\-next} & An auxiliary variable with the type of a pointer to a list node that will hold a pointer to the next item to be visited during the iteration \\
+\hline
+{\em next\_\-member} & Name of the member of the list node type that holds a a pointer to the next item \\
+\hline
+\end{DoxyParams}
+\hypertarget{utils_8h_a6ce9a1b6d0aa27fcec4ff8bd58e42435}{
+\index{utils.h@{utils.h}!linked\_\-list\_\-free@{linked\_\-list\_\-free}}
+\index{linked\_\-list\_\-free@{linked\_\-list\_\-free}!utils.h@{utils.h}}
+\subsubsection[{linked\_\-list\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}\#define linked\_\-list\_\-free(
+\begin{DoxyParamCaption}
+\item[{}]{list, }
+\item[{}]{type, }
+\item[{}]{next\_\-member}
+\end{DoxyParamCaption}
+)}}
+\label{utils_8h_a6ce9a1b6d0aa27fcec4ff8bd58e42435}
+{\bfseries Value:}
+\begin{DoxyCode}
+{ \
+    type *iter__, *next__; \
+    for(iter__ = list, next__ = (list != NULL) ? list->next_member : NULL; \
+        iter__ != NULL; \
+        iter__ = next__, next__ = (next__ != NULL) ? next__->next_member : NULL) 
+      \
+    { \
+        free(iter__); \
+    } \
+}
+\end{DoxyCode}
+
+
+Iterates through a linked list free()'ing all it's items. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & The linked list \\
+\hline
+{\em type} & The type of the linked list nodes \\
+\hline
+{\em next\_\-member} & Name of the member of the list node that points to the next item \\
+\hline
+\end{DoxyParams}
