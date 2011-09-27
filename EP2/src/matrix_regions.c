@@ -80,10 +80,15 @@ int main(void) {
                 printf("  %u: %u pontos\n", region_num, point_count);
                 region_num++;
             }
+            
+            bitmap_region_list_free(regions);
         } else {
             printf("Nenhuma região encontrada.\n");
         }
+        
+        bitmap_free(map);
     }
 
     return 0;
 }
+

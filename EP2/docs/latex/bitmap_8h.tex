@@ -12,11 +12,11 @@ Functions and structures for representing and manipulating bit matrixes.
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structbitmap}{bitmap}
-\begin{DoxyCompactList}\small\item\em Type for a matrix of bits. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Type for a matrix of bits. \item\end{DoxyCompactList}\item 
 struct \hyperlink{structbitmap__region}{bitmap\_\-region}
-\begin{DoxyCompactList}\small\item\em Type representing a connected region of points in a bitmap. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Type representing a connected region of points in a bitmap. \item\end{DoxyCompactList}\item 
 struct \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list}
-\begin{DoxyCompactList}\small\item\em Type representing a list of multiple bitmap\_\-region's. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Type representing a list of multiple bitmap\_\-region's. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
@@ -24,30 +24,36 @@ struct \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list}
 typedef unsigned char \hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit}}
 \label{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}
 
-\begin{DoxyCompactList}\small\item\em Type representing a single bit in an image matrix. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Type representing a single bit in an image matrix. \item\end{DoxyCompactList}\item 
 \hypertarget{bitmap_8h_ae6f3ec946427d08884171ed71a3a633f}{
 typedef struct \hyperlink{structbitmap__region}{bitmap\_\-region} \hyperlink{bitmap_8h_ae6f3ec946427d08884171ed71a3a633f}{bitmap\_\-region}}
 \label{bitmap_8h_ae6f3ec946427d08884171ed71a3a633f}
 
-\begin{DoxyCompactList}\small\item\em Type representing a connected region of points in a bitmap. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Type representing a connected region of points in a bitmap. \item\end{DoxyCompactList}\item 
 \hypertarget{bitmap_8h_a0370d51ec1faf14f5079fcf4e2cae0a9}{
 typedef struct \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} \hyperlink{bitmap_8h_a0370d51ec1faf14f5079fcf4e2cae0a9}{bitmap\_\-region\_\-list}}
 \label{bitmap_8h_a0370d51ec1faf14f5079fcf4e2cae0a9}
 
-\begin{DoxyCompactList}\small\item\em Type representing a list of multiple bitmap\_\-region's. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Type representing a list of multiple bitmap\_\-region's. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit} \hyperlink{bitmap_8h_a581e62048e77231d6e792c3481e4679a}{bitmap\_\-getbit} (const \hyperlink{structbitmap}{bitmap} $\ast$map, int x, int y)
-\begin{DoxyCompactList}\small\item\em Retrieves the value of a single bit from a bitmap. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Retrieves the value of a single bit from a bitmap. \item\end{DoxyCompactList}\item 
 void \hyperlink{bitmap_8h_a96cb4116f6302d8e554b94b0e12a41a5}{bitmap\_\-setbit} (\hyperlink{structbitmap}{bitmap} $\ast$map, int x, int y, \hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit} value)
-\begin{DoxyCompactList}\small\item\em Sets the value of a single bit from a bitmap. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Sets the value of a single bit from a bitmap. \item\end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a989e1934bfc69e85614bb73f249a12c6}{bitmap\_\-free} (\hyperlink{structbitmap}{bitmap} $\ast$map)
+\begin{DoxyCompactList}\small\item\em Frees a bitmap and its associated data. \item\end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a83de5d304b317f3570f8657493acca69}{bitmap\_\-region\_\-free} (\hyperlink{structbitmap__region}{bitmap\_\-region} $\ast$region)
+\begin{DoxyCompactList}\small\item\em Frees a \hyperlink{structbitmap__region}{bitmap\_\-region} and its associated data. \item\end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a7f6950c17b6445e9dc76845b5a4e3dc1}{bitmap\_\-region\_\-list\_\-free} (\hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$list)
+\begin{DoxyCompactList}\small\item\em Frees a \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} and its associated data. \item\end{DoxyCompactList}\item 
 \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$ \hyperlink{bitmap_8h_aa1d7a097132b1f416722e5e46c3b4e21}{bitmap\_\-find\_\-all\_\-regions} (\hyperlink{structbitmap}{bitmap} $\ast$map)
-\begin{DoxyCompactList}\small\item\em Retrieves a list of all the connected regions from a bitmap. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Retrieves a list of all the connected regions from a bitmap. \item\end{DoxyCompactList}\item 
 char $\ast$ \hyperlink{bitmap_8h_aa254e2f18dcd08813e2844b4760d20fd}{bitmap\_\-regions\_\-print} (const \hyperlink{structbitmap}{bitmap} $\ast$map, const \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$regions)
-\begin{DoxyCompactList}\small\item\em Generates the string representation of multiple regions on a matrix. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Generates the string representation of multiple regions on a matrix. \item\end{DoxyCompactList}\item 
 \hyperlink{structbitmap}{bitmap} $\ast$ \hyperlink{bitmap_8h_a16d899c642d1dca0adc01878dde19b2d}{bitmap\_\-read} (FILE $\ast$infile)
-\begin{DoxyCompactList}\small\item\em Reads a bitmap from a file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Reads a bitmap from a file. \item\end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -81,6 +87,24 @@ This function is destructive: the bitmap will be completely zero-\/ed out after 
 \begin{DoxyReturn}{Returns}
 Pointer to the first item of the list of regions, or NULL on error 
 \end{DoxyReturn}
+\hypertarget{bitmap_8h_a989e1934bfc69e85614bb73f249a12c6}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-free@{bitmap\_\-free}}
+\index{bitmap\_\-free@{bitmap\_\-free}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void bitmap\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf bitmap} $\ast$}]{map}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_a989e1934bfc69e85614bb73f249a12c6}
+
+
+Frees a bitmap and its associated data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em map} & A bitmap to free \\
+\hline
+\end{DoxyParams}
 \hypertarget{bitmap_8h_a581e62048e77231d6e792c3481e4679a}{
 \index{bitmap.h@{bitmap.h}!bitmap\_\-getbit@{bitmap\_\-getbit}}
 \index{bitmap\_\-getbit@{bitmap\_\-getbit}!bitmap.h@{bitmap.h}}
@@ -129,6 +153,42 @@ Reads a bitmap from a file.
 \begin{DoxyReturn}{Returns}
 The read bitmap or NULL on error 
 \end{DoxyReturn}
+\hypertarget{bitmap_8h_a83de5d304b317f3570f8657493acca69}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-region\_\-free@{bitmap\_\-region\_\-free}}
+\index{bitmap\_\-region\_\-free@{bitmap\_\-region\_\-free}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-region\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void bitmap\_\-region\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf bitmap\_\-region} $\ast$}]{region}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_a83de5d304b317f3570f8657493acca69}
+
+
+Frees a \hyperlink{structbitmap__region}{bitmap\_\-region} and its associated data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em region} & A \hyperlink{structbitmap__region}{bitmap\_\-region} to free \\
+\hline
+\end{DoxyParams}
+\hypertarget{bitmap_8h_a7f6950c17b6445e9dc76845b5a4e3dc1}{
+\index{bitmap.h@{bitmap.h}!bitmap\_\-region\_\-list\_\-free@{bitmap\_\-region\_\-list\_\-free}}
+\index{bitmap\_\-region\_\-list\_\-free@{bitmap\_\-region\_\-list\_\-free}!bitmap.h@{bitmap.h}}
+\subsubsection[{bitmap\_\-region\_\-list\_\-free}]{\setlength{\rightskip}{0pt plus 5cm}void bitmap\_\-region\_\-list\_\-free (
+\begin{DoxyParamCaption}
+\item[{{\bf bitmap\_\-region\_\-list} $\ast$}]{list}
+\end{DoxyParamCaption}
+)}}
+\label{bitmap_8h_a7f6950c17b6445e9dc76845b5a4e3dc1}
+
+
+Frees a \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} and its associated data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & A \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} to free \\
+\hline
+\end{DoxyParams}
 \hypertarget{bitmap_8h_aa254e2f18dcd08813e2844b4760d20fd}{
 \index{bitmap.h@{bitmap.h}!bitmap\_\-regions\_\-print@{bitmap\_\-regions\_\-print}}
 \index{bitmap\_\-regions\_\-print@{bitmap\_\-regions\_\-print}!bitmap.h@{bitmap.h}}

@@ -73,6 +73,32 @@ bitmap_setbit(bitmap *map,
               image_bit value);
 
 /**
+ * Frees a bitmap and its associated data
+ *
+ * @param map A bitmap to free
+ */
+
+
+void
+bitmap_free(bitmap *map);
+
+/**
+ * Frees a bitmap_region and its associated data
+ *
+ * @param region A bitmap_region to free
+ */
+void
+bitmap_region_free(bitmap_region *region);
+
+/**
+ * Frees a bitmap_region_list and its associated data
+ *
+ * @param list A bitmap_region_list to free
+ */
+void
+bitmap_region_list_free(bitmap_region_list* list);
+
+/**
  * Retrieves a list of all the connected regions from a bitmap.
  * 
  * @warning This function is destructive: the bitmap will be completely zero-ed
@@ -109,3 +135,4 @@ bitmap*
 bitmap_read(FILE* infile);
 
 #endif /* BITMAP_H */
+

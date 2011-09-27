@@ -46,6 +46,38 @@ bitmap_setbit(bitmap *map,
     map->data[(y * map->width) + x] = value;
 }
 
+void
+bitmap_free(bitmap *map)
+{
+    if(map != NULL) {
+        if(map->data != NULL)
+            free(map->data);
+        
+        free(map);
+    }
+}
+
+void
+bitmap_region_free(bitmap_region *region)
+{
+    if(region != NULL)
+        linked_list_free(region, bitmap_region, next);
+}
+
+void
+bitmap_region_list_free(bitmap_region_list* list)
+{
+    if(list != NULL) {
+        bitmap_region_list *iter, *iter_next;
+
+        /* Free both the stored regions themselves, and the list entries */
+        linked_list_foreach(list, iter, iter_next, next) {
+            bitmap_region_free(iter->region);
+            free(iter);
+        }
+    }
+}
+
 /**
  * @internal
  *
@@ -106,7 +138,7 @@ bitmap_find_region__(bitmap *map,
                      bitmap_region** region_start,
                      bitmap_region** region_end)
 {
-	/* Array of structures representing the directions we'll check */
+    /* Array of structures representing the directions we'll check */
     struct {
         int x, y;
     } const deltas[] = {
@@ -160,7 +192,7 @@ bitmap_find_region__(bitmap *map,
         for(j = 1; j <= edges[i]; j++) {
             for(k = 0; k < ARRAY_SIZE(deltas); k++) {
                 int x = start_x + (deltas[i].x * j) + deltas[k].x,
-					y = start_y + (deltas[i].y * j) + deltas[k].y;
+                    y = start_y + (deltas[i].y * j) + deltas[k].y;
 
                 bitmap_find_region__(map, x, y, region_start, region_end);
             }
@@ -344,3 +376,4 @@ error:
 
     return NULL;
 }
+
