@@ -2,7 +2,8 @@
  *
  * General utility functions
  *
- * @author Daniel Miranda
+ * @author Daniel Miranda (No. USP: 7577406) <danielkza2@gmail.com>
+ *         Exercício-Programa 2 - MAC0122 - IME-USP - 2011
  */
 
 #ifndef UTILS_H

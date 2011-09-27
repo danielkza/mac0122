@@ -2,7 +2,8 @@
  *
  * Functions and structures for representing and manipulating bit matrixes
  *
- * @author Daniel Miranda
+ * @author Daniel Miranda (No. USP: 7577406) <danielkza2@gmail.com>
+ *         Exercício-Programa 2 - MAC0122 - IME-USP - 2011
  */
 
 #ifndef BITMAP_H

@@ -14,7 +14,7 @@ OBJS := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 
 VPATH = $(SRCDIR)
 
-all: $(OBJDIR)/$(EXECUTABLE) doc
+all: $(OBJDIR)/$(EXECUTABLE) docs
 
 $(OBJDIR)/$(EXECUTABLE): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -22,8 +22,8 @@ $(OBJDIR)/$(EXECUTABLE): $(OBJS)
 $(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY: doc
-doc:
+.PHONY: docs
+docs:
 ifeq ($(DOXYGEN),)
 	@echo "* You don't have doxygen installed! Please install it if you want"
 	@echo "* to generate the documentation files."

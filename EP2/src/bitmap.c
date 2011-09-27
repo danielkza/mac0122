@@ -2,7 +2,9 @@
  *
  * Functions and structures for representing and manipulating bit matrixes
  *
- * @author Daniel Miranda
+ * @author Daniel Miranda (No. USP: 7577406) <danielkza2@gmail.com>
+ *         Exercício-Programa 2 - MAC0122 - IME-USP - 2011
+ *
  */
 
 #include <stdlib.h>
@@ -73,9 +75,14 @@ bitmap_find_region__(bitmap *map,
     if(region_start == NULL || region_end == NULL)
         return 0;
 
+    /* Don't bother doing anything if the very first point on the region is a
+       zero. */
     if(bitmap_getbit(map, start_x, start_y) == 0)
         return 0;
-                    
+
+    /* Clear the bit so it is not found again later: this makes our algorithm
+       much simpler as we can just recursively walk around all adjacent points
+       naively. */                    
     bitmap_setbit(map, start_x, start_y, 0);
         
     region_entry = malloc(sizeof(*region_entry));
@@ -106,8 +113,7 @@ bitmap_find_all_regions(bitmap* map)
 {
     bitmap_region_list *list_start = NULL,
                        *list_end = NULL;
-    bitmap_region *region_start = NULL,
-                  *region_end = NULL;
+    bitmap_region *region_start, *region_end;
     int x, y;
 
     if(map == NULL || map->data == NULL)
@@ -118,6 +124,8 @@ bitmap_find_all_regions(bitmap* map)
             region_start = region_end = NULL;
 
             if(bitmap_find_region__(map, x, y, &region_start, &region_end)) {
+                /* A region was found, create an entry for it and append it to
+                   the list of regions. */
                 bitmap_region_list *list_entry = malloc(sizeof(*list_entry));
                 if(list_entry == NULL)
                     goto error;
@@ -138,6 +146,9 @@ bitmap_find_all_regions(bitmap* map)
     return list_start;
 
 error:
+    /* An error may happen when we have acquired a region, but are unable to 
+       continue adding it to the region list. Make sure not to leak it in that
+       case. */
     if(region_start != NULL) {
         linked_list_free(region_start, bitmap_region, next);
     }
@@ -145,6 +156,7 @@ error:
     if(list_start != NULL) {
         bitmap_region_list *iter, *iter_next;
 
+        /* Free both the stored regions themselves, and the list entries */
         linked_list_foreach(list_start, iter, iter_next, next) {
             linked_list_free(iter->region, bitmap_region, next);
             free(iter);
@@ -160,7 +172,7 @@ bitmap_regions_print(const bitmap* map,
 {
     const bitmap_region_list *region_cur, *region_next;
     int row;
-    unsigned char region_num;
+    char ch;
 
     char* regions_str;
     size_t regions_str_row_size, regions_str_size;
@@ -168,34 +180,35 @@ bitmap_regions_print(const bitmap* map,
     if(regions == NULL)
         return NULL;
 
-    /* Allocate space for each item on the matrix (with the padding space
-     * between each item and a newline at each row), plus the terminator
-     */
-    regions_str_row_size = 2 * map->width;
-    regions_str_size = map->height * regions_str_row_size + 1;
+    /* Allocate space for a string representing the matrix. In a row, one 
+       character per column is meant for a region letter and another one for a
+       paddinng whitespace (a space for all but the last column, which is
+       followed by a newline). */
+    regions_str_row_size = (2 * map->width);
+    regions_str_size = (map->height * regions_str_row_size) + 1;
                                            
     regions_str = malloc(regions_str_size);
     if(regions_str == NULL)
         return NULL;
 
+    /* Initialize the whole string with spaces: we'll then sparingly insert the
+       newlines, and finally the region letters as we walk the lists */
     memset(regions_str, ' ', regions_str_size - 1);
     regions_str[regions_str_size - 1] = '\0';
 
-    for(row = 1; row <= map->height; row++) {
-        regions_str[row * regions_str_row_size - 1] = '\n';
-    }
+    for(row = 1; row <= map->height; row++)
+        regions_str[(row * regions_str_row_size) - 1] = '\n';
 
-    region_num = 0;
+    ch = 'a';
     linked_list_foreach(regions, region_cur, region_next, next) {
         const bitmap_region *point_cur, *point_next;
-        char c = 'a' + region_num;
-
+        
         linked_list_foreach(region_cur->region, point_cur, point_next, next) {
             regions_str[(point_cur->y * regions_str_row_size) +
-                        (2 * point_cur->x)] = c;
+                        (2 * point_cur->x)] = ch;
         }
 
-        region_num++;
+        ch++;
     }
 
     return regions_str;
@@ -235,6 +248,9 @@ bitmap_read(FILE* infile)
             
         switch(c) {
         case '0':
+            /* The data array starts zeroed, skip a redundant assignmen */
+            
+            /* bitmap_data[y * width + x] = 0; */
             break;
         case '1':
             bitmap_data[y * width + x] = 1;

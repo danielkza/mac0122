@@ -1,3 +1,11 @@
+/** @file matrix_regions.c
+ *
+ * Main program file
+ *
+ * @author Daniel Miranda (No. USP: 7577406) <danielkza2@gmail.com>
+ *         Exercício-Programa 2 - MAC0122 - IME-USP - 2011
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,7 +56,7 @@ int main(void) {
                 }
             }
 
-            printf("%u regioes encontradas:\n", region_count);
+            printf("%u regiões encontradas:\n", region_count);
 
             region_num = 1;
             linked_list_foreach(regions, region_cur, region_next, next) {
@@ -64,7 +72,7 @@ int main(void) {
                 region_num++;
             }
         } else {
-            printf("Nenhuma regiao encontrada.\n");
+            printf("Nenhuma região encontrada.\n");
         }
     }
 
