@@ -78,8 +78,8 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a single bit from a bitmap.  <a href="#a581e62048e77231d6e792c3481e4679a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitmap_8c.html#a96cb4116f6302d8e554b94b0e12a41a5">bitmap_setbit</a> (<a class="el" href="structbitmap.html">bitmap</a> *map, int x, int y, <a class="el" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b">image_bit</a> value)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the value of a single bit from a bitmap.  <a href="#a96cb4116f6302d8e554b94b0e12a41a5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitmap_8c.html#ab571895231f167314606f82b91d93a42">bitmap_region_entry_add__</a> (int x, int y, <a class="el" href="structbitmap__region.html">bitmap_region</a> **region_start, <a class="el" href="structbitmap__region.html">bitmap_region</a> **region_end)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitmap_8c.html#aa7aa485d6211d3aff808a704a7cd9760">bitmap_find_region__</a> (<a class="el" href="structbitmap.html">bitmap</a> *map, int start_x, int start_y, <a class="el" href="structbitmap__region.html">bitmap_region</a> **region_start, <a class="el" href="structbitmap__region.html">bitmap_region</a> **region_end)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a single connected regions from a bitmap, starting at a given point.  <a href="#aa7aa485d6211d3aff808a704a7cd9760"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbitmap__region__list.html">bitmap_region_list</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitmap_8c.html#aa1d7a097132b1f416722e5e46c3b4e21">bitmap_find_all_regions</a> (<a class="el" href="structbitmap.html">bitmap</a> *map)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a list of all the connected regions from a bitmap.  <a href="#aa1d7a097132b1f416722e5e46c3b4e21"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="bitmap_8c.html#aa254e2f18dcd08813e2844b4760d20fd">bitmap_regions_print</a> (const <a class="el" href="structbitmap.html">bitmap</a> *map, const <a class="el" href="structbitmap__region__list.html">bitmap_region_list</a> *regions)</td></tr>
@@ -160,8 +160,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-
-<p>Retrieves a single connected regions from a bitmap, starting at a given point. </p>
+<p>Retrieves a single connected regions from a bitmap, starting at a given point.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">map</td><td>The bitmap to use </td></tr>
@@ -242,6 +241,55 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The read bitmap or NULL on error </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab571895231f167314606f82b91d93a42"></a><!-- doxytag: member="bitmap.c::bitmap_region_entry_add__" ref="ab571895231f167314606f82b91d93a42" args="(int x, int y, bitmap_region **region_start, bitmap_region **region_end)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void bitmap_region_entry_add__ </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbitmap__region.html">bitmap_region</a> **&#160;</td>
+          <td class="paramname"><em>region_start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbitmap__region.html">bitmap_region</a> **&#160;</td>
+          <td class="paramname"><em>region_end</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Adds a point to the list of points representing a region on a bitmap</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>0-based index of the starting position on the x-axis </td></tr>
+    <tr><td class="paramname">y</td><td>0-based index of the starting position on the y-axis </td></tr>
+    <tr><td class="paramname">region_start</td><td>Pointer to a pointer to a <a class="el" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> that will be updated to refer to the first item of the newly created region </td></tr>
+    <tr><td class="paramname">region_end</td><td>Pointer to a pointer to a <a class="el" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> that will be updated to refer to the last item of the newly created region </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -348,7 +396,7 @@ Functions</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 08:53:20 for EP2 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 13:43:24 for EP2 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

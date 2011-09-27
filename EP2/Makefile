@@ -33,6 +33,6 @@ endif
 
 .PHONY: clean
 clean:
-	-rm -f $(OBJDIR)/*.o $(OBJDIR)/*.exe$ (EXECUTABLE)
+	-rm -f $(OBJDIR)/*.o $(OBJDIR)/*.exe $(EXECUTABLE)
 
 

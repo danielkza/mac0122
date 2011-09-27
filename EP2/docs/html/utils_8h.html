@@ -72,6 +72,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a70c57aae3eb654e205459b4362c8089a">ARRAY_SIZE</a>(array)&#160;&#160;&#160;(sizeof(array) / sizeof(array[0]))</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the compile-time size, in elements, of a one-dimensional array.  <a href="#a70c57aae3eb654e205459b4362c8089a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#a6ce9a1b6d0aa27fcec4ff8bd58e42435">linked_list_free</a>(list, type, next_member)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterates through a linked list free()'ing all it's items.  <a href="#a6ce9a1b6d0aa27fcec4ff8bd58e42435"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="utils_8h.html#aafe56689203de0048b842ea1c018cfe4">linked_list_foreach</a>(list, iter, iter_next, next_member)</td></tr>
@@ -81,6 +83,32 @@ Defines</h2></td></tr>
 <div class="textblock"><p>General utility functions. </p>
 <dl class="author"><dt><b>Author:</b></dt><dd>Daniel Miranda (No. USP: 7577406) &lt;<a href="mailto:danielkza2@gmail.com">danielkza2@gmail.com</a>&gt; Exercício-Programa 2 - MAC0122 - IME-USP - 2011 </dd></dl>
 </div><hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a70c57aae3eb654e205459b4362c8089a"></a><!-- doxytag: member="utils.h::ARRAY_SIZE" ref="a70c57aae3eb654e205459b4362c8089a" args="(array)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ARRAY_SIZE</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">array</td><td>)</td>
+          <td>&#160;&#160;&#160;(sizeof(array) / sizeof(array[0]))</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Retrieves the compile-time size, in elements, of a one-dimensional array. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">array</td><td>An array</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The number of elements in the array </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="aafe56689203de0048b842ea1c018cfe4"></a><!-- doxytag: member="utils.h::linked_list_foreach" ref="aafe56689203de0048b842ea1c018cfe4" args="(list, iter, iter_next, next_member)" -->
 <div class="memitem">
 <div class="memproto">
@@ -131,10 +159,10 @@ Defines</h2></td></tr>
      <span class="keywordtype">int</span> n;
      <span class="keyword">struct </span>my_list *next;
  } my_list;
- 
+
  my_list *head, *tail, *list_cur, *list_next;
  <span class="keywordtype">int</span> i;
- 
+
  <span class="keywordflow">for</span>(i = 0; i &lt; 100; i++) {
      my_list* item = malloc(<span class="keyword">sizeof</span>(*item));
 
@@ -148,7 +176,7 @@ Defines</h2></td></tr>
 
      tail = item;
   }
-  
+
  <a class="code" href="utils_8h.html#aafe56689203de0048b842ea1c018cfe4" title="Macro for iterating through a linked list.">linked_list_foreach</a>(head, list_cur, list_next, next) {
      printf(<span class="stringliteral">&quot;%d\n&quot;</span>, list_cur-&gt;n);
  }
@@ -231,7 +259,7 @@ Defines</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 08:53:20 for EP2 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 13:43:24 for EP2 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

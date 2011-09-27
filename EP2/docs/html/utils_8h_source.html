@@ -66,27 +66,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;stdio.h&gt;</span>
 <a name="l00014"></a>00014 
-<a name="l00024"></a><a class="code" href="utils_8h.html#a6ce9a1b6d0aa27fcec4ff8bd58e42435">00024</a> <span class="preprocessor">#define linked_list_free(list, type, next_member) \</span>
-<a name="l00025"></a>00025 <span class="preprocessor">{ \</span>
-<a name="l00026"></a>00026 <span class="preprocessor">    type *iter__, *next__; \</span>
-<a name="l00027"></a>00027 <span class="preprocessor">    for(iter__ = list, next__ = (list != NULL) ? list-&gt;next_member : NULL; \</span>
-<a name="l00028"></a>00028 <span class="preprocessor">        iter__ != NULL; \</span>
-<a name="l00029"></a>00029 <span class="preprocessor">        iter__ = next__, next__ = (next__ != NULL) ? next__-&gt;next_member : NULL) \</span>
-<a name="l00030"></a>00030 <span class="preprocessor">    { \</span>
-<a name="l00031"></a>00031 <span class="preprocessor">        free(iter__); \</span>
-<a name="l00032"></a>00032 <span class="preprocessor">    } \</span>
-<a name="l00033"></a>00033 <span class="preprocessor">}</span>
-<a name="l00034"></a>00034 <span class="preprocessor"></span>
-<a name="l00035"></a>00035 
-<a name="l00082"></a><a class="code" href="utils_8h.html#aafe56689203de0048b842ea1c018cfe4">00082</a> <span class="preprocessor">#define linked_list_foreach(list, iter, iter_next, next_member) \</span>
-<a name="l00083"></a>00083 <span class="preprocessor">    for(iter = list, iter_next = (list != NULL) ? list-&gt;next_member \</span>
-<a name="l00084"></a>00084 <span class="preprocessor">                                                : NULL; \</span>
-<a name="l00085"></a>00085 <span class="preprocessor">        iter != NULL; \</span>
-<a name="l00086"></a>00086 <span class="preprocessor">        iter = iter_next, iter_next = (iter_next != NULL) ? \</span>
-<a name="l00087"></a>00087 <span class="preprocessor">                                      iter_next-&gt;next_member : NULL \</span>
-<a name="l00088"></a>00088 <span class="preprocessor">    )</span>
-<a name="l00089"></a>00089 <span class="preprocessor"></span>
-<a name="l00090"></a>00090 <span class="preprocessor">#endif</span>
+<a name="l00022"></a><a class="code" href="utils_8h.html#a70c57aae3eb654e205459b4362c8089a">00022</a> <span class="preprocessor">#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))</span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span>
+<a name="l00033"></a><a class="code" href="utils_8h.html#a6ce9a1b6d0aa27fcec4ff8bd58e42435">00033</a> <span class="preprocessor">#define linked_list_free(list, type, next_member) \</span>
+<a name="l00034"></a>00034 <span class="preprocessor">{ \</span>
+<a name="l00035"></a>00035 <span class="preprocessor">    type *iter__, *next__; \</span>
+<a name="l00036"></a>00036 <span class="preprocessor">    for(iter__ = list, next__ = (list != NULL) ? list-&gt;next_member : NULL; \</span>
+<a name="l00037"></a>00037 <span class="preprocessor">        iter__ != NULL; \</span>
+<a name="l00038"></a>00038 <span class="preprocessor">        iter__ = next__, next__ = (next__ != NULL) ? next__-&gt;next_member : NULL) \</span>
+<a name="l00039"></a>00039 <span class="preprocessor">    { \</span>
+<a name="l00040"></a>00040 <span class="preprocessor">        free(iter__); \</span>
+<a name="l00041"></a>00041 <span class="preprocessor">    } \</span>
+<a name="l00042"></a>00042 <span class="preprocessor">}</span>
+<a name="l00043"></a>00043 <span class="preprocessor"></span>
+<a name="l00044"></a>00044 
+<a name="l00091"></a><a class="code" href="utils_8h.html#aafe56689203de0048b842ea1c018cfe4">00091</a> <span class="preprocessor">#define linked_list_foreach(list, iter, iter_next, next_member) \</span>
+<a name="l00092"></a>00092 <span class="preprocessor">    for(iter = list, iter_next = (list != NULL) ? list-&gt;next_member \</span>
+<a name="l00093"></a>00093 <span class="preprocessor">                                                : NULL; \</span>
+<a name="l00094"></a>00094 <span class="preprocessor">        iter != NULL; \</span>
+<a name="l00095"></a>00095 <span class="preprocessor">        iter = iter_next, iter_next = (iter_next != NULL) ? \</span>
+<a name="l00096"></a>00096 <span class="preprocessor">                                      iter_next-&gt;next_member : NULL \</span>
+<a name="l00097"></a>00097 <span class="preprocessor">    )</span>
+<a name="l00098"></a>00098 <span class="preprocessor"></span>
+<a name="l00099"></a>00099 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -103,7 +105,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 08:53:20 for EP2 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 13:43:24 for EP2 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

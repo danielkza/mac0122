@@ -20,8 +20,10 @@ Functions and structures for representing and manipulating bit matrixes.
 \begin{DoxyCompactList}\small\item\em Retrieves the value of a single bit from a bitmap. \end{DoxyCompactList}\item 
 void \hyperlink{bitmap_8c_a96cb4116f6302d8e554b94b0e12a41a5}{bitmap\_\-setbit} (\hyperlink{structbitmap}{bitmap} $\ast$map, int x, int y, \hyperlink{bitmap_8h_abb0a6c6bdf6faffa9e3773e1d687d67b}{image\_\-bit} value)
 \begin{DoxyCompactList}\small\item\em Sets the value of a single bit from a bitmap. \end{DoxyCompactList}\item 
+static void \hyperlink{bitmap_8c_ab571895231f167314606f82b91d93a42}{bitmap\_\-region\_\-entry\_\-add\_\-\_\-} (int x, int y, \hyperlink{structbitmap__region}{bitmap\_\-region} $\ast$$\ast$region\_\-start, \hyperlink{structbitmap__region}{bitmap\_\-region} $\ast$$\ast$region\_\-end)
+\item 
 static int \hyperlink{bitmap_8c_aa7aa485d6211d3aff808a704a7cd9760}{bitmap\_\-find\_\-region\_\-\_\-} (\hyperlink{structbitmap}{bitmap} $\ast$map, int start\_\-x, int start\_\-y, \hyperlink{structbitmap__region}{bitmap\_\-region} $\ast$$\ast$region\_\-start, \hyperlink{structbitmap__region}{bitmap\_\-region} $\ast$$\ast$region\_\-end)
-\begin{DoxyCompactList}\small\item\em Retrieves a single connected regions from a bitmap, starting at a given point. \end{DoxyCompactList}\item 
+\item 
 \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$ \hyperlink{bitmap_8c_aa1d7a097132b1f416722e5e46c3b4e21}{bitmap\_\-find\_\-all\_\-regions} (\hyperlink{structbitmap}{bitmap} $\ast$map)
 \begin{DoxyCompactList}\small\item\em Retrieves a list of all the connected regions from a bitmap. \end{DoxyCompactList}\item 
 char $\ast$ \hyperlink{bitmap_8c_aa254e2f18dcd08813e2844b4760d20fd}{bitmap\_\-regions\_\-print} (const \hyperlink{structbitmap}{bitmap} $\ast$map, const \hyperlink{structbitmap__region__list}{bitmap\_\-region\_\-list} $\ast$regions)
@@ -74,9 +76,7 @@ Pointer to the first item of the list of regions, or NULL on error
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
 \label{bitmap_8c_aa7aa485d6211d3aff808a704a7cd9760}
-
-
-Retrieves a single connected regions from a bitmap, starting at a given point. 
+Retrieves a single connected regions from a bitmap, starting at a given point.
 
 
 \begin{DoxyParams}{Parameters}
@@ -139,6 +139,31 @@ Reads a bitmap from a file.
 \begin{DoxyReturn}{Returns}
 The read bitmap or NULL on error 
 \end{DoxyReturn}
+\hypertarget{bitmap_8c_ab571895231f167314606f82b91d93a42}{
+\index{bitmap.c@{bitmap.c}!bitmap\_\-region\_\-entry\_\-add\_\-\_\-@{bitmap\_\-region\_\-entry\_\-add\_\-\_\-}}
+\index{bitmap\_\-region\_\-entry\_\-add\_\-\_\-@{bitmap\_\-region\_\-entry\_\-add\_\-\_\-}!bitmap.c@{bitmap.c}}
+\subsubsection[{bitmap\_\-region\_\-entry\_\-add\_\-\_\-}]{\setlength{\rightskip}{0pt plus 5cm}static void bitmap\_\-region\_\-entry\_\-add\_\-\_\- (
+\begin{DoxyParamCaption}
+\item[{int}]{x, }
+\item[{int}]{y, }
+\item[{{\bf bitmap\_\-region} $\ast$$\ast$}]{region\_\-start, }
+\item[{{\bf bitmap\_\-region} $\ast$$\ast$}]{region\_\-end}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily  \mbox{[}static\mbox{]}}}}
+\label{bitmap_8c_ab571895231f167314606f82b91d93a42}
+Adds a point to the list of points representing a region on a bitmap
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & 0-\/based index of the starting position on the x-\/axis \\
+\hline
+{\em y} & 0-\/based index of the starting position on the y-\/axis \\
+\hline
+{\em region\_\-start} & Pointer to a pointer to a \hyperlink{structbitmap__region}{bitmap\_\-region} that will be updated to refer to the first item of the newly created region \\
+\hline
+{\em region\_\-end} & Pointer to a pointer to a \hyperlink{structbitmap__region}{bitmap\_\-region} that will be updated to refer to the last item of the newly created region \\
+\hline
+\end{DoxyParams}
 \hypertarget{bitmap_8c_aa254e2f18dcd08813e2844b4760d20fd}{
 \index{bitmap.c@{bitmap.c}!bitmap\_\-regions\_\-print@{bitmap\_\-regions\_\-print}}
 \index{bitmap\_\-regions\_\-print@{bitmap\_\-regions\_\-print}!bitmap.c@{bitmap.c}}
