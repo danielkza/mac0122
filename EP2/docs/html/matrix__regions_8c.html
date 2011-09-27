@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>EP2: bitmap Struct Reference</title>
+<title>EP2: matrix_regions.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -28,8 +28,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -50,42 +50,65 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Data Fields</a>  </div>
+<a href="#define-members">Defines</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">bitmap Struct Reference</div>  </div>
+<div class="title">matrix_regions.c File Reference</div>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="bitmap" -->
-<p>Type for a matrix of bits.  
- <a href="structbitmap.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="bitmap_8h_source.html">bitmap.h</a>&gt;</code></p>
-<table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Data Fields</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ce73692bd5429f0dc54e2b542af9270"></a><!-- doxytag: member="bitmap::width" ref="a4ce73692bd5429f0dc54e2b542af9270" args="" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbitmap.html#a4ce73692bd5429f0dc54e2b542af9270">width</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Width of the bitmap. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e2342e52df0eb9e5048f85515498adf"></a><!-- doxytag: member="bitmap::height" ref="a6e2342e52df0eb9e5048f85515498adf" args="" -->
-int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbitmap.html#a6e2342e52df0eb9e5048f85515498adf">height</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Height of the bitmap. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6cfd9d4b731895e2ebd1d9524dc7c2a7"></a><!-- doxytag: member="bitmap::data" ref="a6cfd9d4b731895e2ebd1d9524dc7c2a7" args="" -->
-<a class="el" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b">image_bit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbitmap.html#a6cfd9d4b731895e2ebd1d9524dc7c2a7">data</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to an array containing the width * height image_bit's. <br/></td></tr>
+<p>Main program file.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
+<code>#include &lt;stdlib.h&gt;</code><br/>
+<code>#include &lt;string.h&gt;</code><br/>
+<code>#include &lt;ctype.h&gt;</code><br/>
+<code>#include &quot;<a class="el" href="utils_8h_source.html">utils.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="bitmap_8h_source.html">bitmap.h</a>&quot;</code><br/>
+</div><table class="memberdecls">
+<tr><td colspan="2"><h2><a name="define-members"></a>
+Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee4ccedb0867bedc352f868d8f836b5f"></a><!-- doxytag: member="matrix_regions.c::DEBUG_PRINT_READ_BITMAP" ref="aee4ccedb0867bedc352f868d8f836b5f" args="" -->
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__regions_8c.html#aee4ccedb0867bedc352f868d8f836b5f">DEBUG_PRINT_READ_BITMAP</a>&#160;&#160;&#160;0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is set a copy of all bitmaps read in the command line will be printed for inspection. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="matrix__regions_8c.html#a840291bc02cba5474a4cb46a9b9566fe">main</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main program entry point.  <a href="#a840291bc02cba5474a4cb46a9b9566fe"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Type for a matrix of bits. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li><a class="el" href="bitmap_8h_source.html">bitmap.h</a></li>
-</ul>
+<div class="textblock"><p>Main program file. </p>
+<dl class="author"><dt><b>Author:</b></dt><dd>Daniel Miranda (No. USP: 7577406) &lt;<a href="mailto:danielkza2@gmail.com">danielkza2@gmail.com</a>&gt; Exercício-Programa 2 - MAC0122 - IME-USP - 2011 </dd></dl>
+</div><hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a840291bc02cba5474a4cb46a9b9566fe"></a><!-- doxytag: member="matrix_regions.c::main" ref="a840291bc02cba5474a4cb46a9b9566fe" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int main </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Main program entry point. </p>
+
+<p><p>Keep consuming input indefinitely: only stop when a matrix of width or height 0 is found</p>
+</p>
+
+</div>
+</div>
 </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"

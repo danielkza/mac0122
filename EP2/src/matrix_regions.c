@@ -14,9 +14,18 @@
 #include "utils.h"
 #include "bitmap.h"
 
+/**
+ * If this is set a copy of all bitmaps read in the command line will be
+ * printed for inspection.
+ */
 #define DEBUG_PRINT_READ_BITMAP 0
 
+/** Main program entry point */
 int main(void) {
+    /**
+     *Keep consuming input indefinitely: only stop when a matrix of width or
+     * height 0 is found
+     */
     for(;;) {
         bitmap* map;
         bitmap_region_list *regions;

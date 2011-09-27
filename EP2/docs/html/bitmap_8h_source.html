@@ -60,53 +60,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="contents">
 <a href="bitmap_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
-<a name="l00008"></a>00008 <span class="preprocessor">#ifndef BITMAP_H</span>
-<a name="l00009"></a>00009 <span class="preprocessor"></span><span class="preprocessor">#define BITMAP_H</span>
-<a name="l00010"></a>00010 <span class="preprocessor"></span>
-<a name="l00011"></a>00011 <span class="preprocessor">#include &lt;stddef.h&gt;</span>
-<a name="l00012"></a>00012 
-<a name="l00014"></a><a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b">00014</a> <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a>;
-<a name="l00015"></a>00015 
-<a name="l00017"></a><a class="code" href="structbitmap.html">00017</a> <span class="keyword">typedef</span> <span class="keyword">struct </span>{
-<a name="l00019"></a><a class="code" href="structbitmap.html#a4ce73692bd5429f0dc54e2b542af9270">00019</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap.html#a4ce73692bd5429f0dc54e2b542af9270" title="Width of the bitmap.">width</a>;
-<a name="l00021"></a><a class="code" href="structbitmap.html#a6e2342e52df0eb9e5048f85515498adf">00021</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap.html#a6e2342e52df0eb9e5048f85515498adf" title="Height of the bitmap.">height</a>;
-<a name="l00023"></a><a class="code" href="structbitmap.html#a6cfd9d4b731895e2ebd1d9524dc7c2a7">00023</a>     <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a> *<a class="code" href="structbitmap.html#a6cfd9d4b731895e2ebd1d9524dc7c2a7" title="Pointer to an array containing the width * height image_bit&#39;s.">data</a>;
-<a name="l00024"></a>00024 } <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>;
-<a name="l00025"></a>00025 
-<a name="l00027"></a><a class="code" href="structbitmap__region.html">00027</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> {
-<a name="l00029"></a><a class="code" href="structbitmap__region.html#ac1164a5047b0c9ace92478c836d16657">00029</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap__region.html#ac1164a5047b0c9ace92478c836d16657" title="0-based position of the point in the x-axis">x</a>;
-<a name="l00031"></a><a class="code" href="structbitmap__region.html#ab8ce59ebe777199ba383a2e1d0d18f8b">00031</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap__region.html#ab8ce59ebe777199ba383a2e1d0d18f8b" title="0-based position of the point in the y-axis">y</a>;
-<a name="l00033"></a><a class="code" href="structbitmap__region.html#a0be812fb867e945ccfde9c5c7eb3bf9b">00033</a>     <span class="keyword">struct </span><a class="code" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> *<a class="code" href="structbitmap__region.html#a0be812fb867e945ccfde9c5c7eb3bf9b" title="Pointer to the next node in the list.">next</a>;
-<a name="l00034"></a>00034 } <a class="code" href="bitmap_8h.html#ae6f3ec946427d08884171ed71a3a633f" title="Type representing a connected region of points in a bitmap.">bitmap_region</a>;
-<a name="l00035"></a>00035 
-<a name="l00037"></a><a class="code" href="structbitmap__region__list.html">00037</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a> {
-<a name="l00039"></a><a class="code" href="structbitmap__region__list.html#a376bbf12235654517689131d4e1c5fa8">00039</a>     <a class="code" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> *<a class="code" href="structbitmap__region__list.html#a376bbf12235654517689131d4e1c5fa8" title="Pointer to a bitmap region.">region</a>;
-<a name="l00041"></a><a class="code" href="structbitmap__region__list.html#ad2aad40e3d47f131b7525a558d827f3d">00041</a>     <span class="keyword">struct </span><a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a> *<a class="code" href="structbitmap__region__list.html#ad2aad40e3d47f131b7525a558d827f3d" title="Pointer to the next node in the list.">next</a>;
-<a name="l00042"></a>00042 } <a class="code" href="bitmap_8h.html#a0370d51ec1faf14f5079fcf4e2cae0a9" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a>;
-<a name="l00043"></a>00043 
-<a name="l00053"></a>00053 <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a>
-<a name="l00054"></a>00054 <a class="code" href="bitmap_8c.html#a581e62048e77231d6e792c3481e4679a" title="Retrieves the value of a single bit from a bitmap.">bitmap_getbit</a>(<span class="keyword">const</span> <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a> *map,
-<a name="l00055"></a>00055               <span class="keywordtype">int</span> x,
-<a name="l00056"></a>00056               <span class="keywordtype">int</span> y);
-<a name="l00057"></a>00057 
+<a name="l00009"></a>00009 <span class="preprocessor">#ifndef BITMAP_H</span>
+<a name="l00010"></a>00010 <span class="preprocessor"></span><span class="preprocessor">#define BITMAP_H</span>
+<a name="l00011"></a>00011 <span class="preprocessor"></span>
+<a name="l00012"></a>00012 <span class="preprocessor">#include &lt;stddef.h&gt;</span>
+<a name="l00013"></a>00013 
+<a name="l00015"></a><a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b">00015</a> <span class="keyword">typedef</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a>;
+<a name="l00016"></a>00016 
+<a name="l00018"></a><a class="code" href="structbitmap.html">00018</a> <span class="keyword">typedef</span> <span class="keyword">struct </span>{
+<a name="l00020"></a><a class="code" href="structbitmap.html#a4ce73692bd5429f0dc54e2b542af9270">00020</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap.html#a4ce73692bd5429f0dc54e2b542af9270" title="Width of the bitmap.">width</a>;
+<a name="l00022"></a><a class="code" href="structbitmap.html#a6e2342e52df0eb9e5048f85515498adf">00022</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap.html#a6e2342e52df0eb9e5048f85515498adf" title="Height of the bitmap.">height</a>;
+<a name="l00024"></a><a class="code" href="structbitmap.html#a6cfd9d4b731895e2ebd1d9524dc7c2a7">00024</a>     <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a> *<a class="code" href="structbitmap.html#a6cfd9d4b731895e2ebd1d9524dc7c2a7" title="Pointer to an array containing the width * height image_bit&#39;s.">data</a>;
+<a name="l00025"></a>00025 } <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>;
+<a name="l00026"></a>00026 
+<a name="l00028"></a><a class="code" href="structbitmap__region.html">00028</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> {
+<a name="l00030"></a><a class="code" href="structbitmap__region.html#ac1164a5047b0c9ace92478c836d16657">00030</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap__region.html#ac1164a5047b0c9ace92478c836d16657" title="0-based position of the point in the x-axis">x</a>;
+<a name="l00032"></a><a class="code" href="structbitmap__region.html#ab8ce59ebe777199ba383a2e1d0d18f8b">00032</a>     <span class="keywordtype">int</span> <a class="code" href="structbitmap__region.html#ab8ce59ebe777199ba383a2e1d0d18f8b" title="0-based position of the point in the y-axis">y</a>;
+<a name="l00034"></a><a class="code" href="structbitmap__region.html#a0be812fb867e945ccfde9c5c7eb3bf9b">00034</a>     <span class="keyword">struct </span><a class="code" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> *<a class="code" href="structbitmap__region.html#a0be812fb867e945ccfde9c5c7eb3bf9b" title="Pointer to the next node in the list.">next</a>;
+<a name="l00035"></a>00035 } <a class="code" href="bitmap_8h.html#ae6f3ec946427d08884171ed71a3a633f" title="Type representing a connected region of points in a bitmap.">bitmap_region</a>;
+<a name="l00036"></a>00036 
+<a name="l00038"></a><a class="code" href="structbitmap__region__list.html">00038</a> <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a> {
+<a name="l00040"></a><a class="code" href="structbitmap__region__list.html#a376bbf12235654517689131d4e1c5fa8">00040</a>     <a class="code" href="structbitmap__region.html" title="Type representing a connected region of points in a bitmap.">bitmap_region</a> *<a class="code" href="structbitmap__region__list.html#a376bbf12235654517689131d4e1c5fa8" title="Pointer to a bitmap region.">region</a>;
+<a name="l00042"></a><a class="code" href="structbitmap__region__list.html#ad2aad40e3d47f131b7525a558d827f3d">00042</a>     <span class="keyword">struct </span><a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a> *<a class="code" href="structbitmap__region__list.html#ad2aad40e3d47f131b7525a558d827f3d" title="Pointer to the next node in the list.">next</a>;
+<a name="l00043"></a>00043 } <a class="code" href="bitmap_8h.html#a0370d51ec1faf14f5079fcf4e2cae0a9" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a>;
+<a name="l00044"></a>00044 
+<a name="l00054"></a>00054 <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a>
+<a name="l00055"></a>00055 <a class="code" href="bitmap_8c.html#a581e62048e77231d6e792c3481e4679a" title="Retrieves the value of a single bit from a bitmap.">bitmap_getbit</a>(<span class="keyword">const</span> <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a> *map,
+<a name="l00056"></a>00056               <span class="keywordtype">int</span> x,
+<a name="l00057"></a>00057               <span class="keywordtype">int</span> y);
 <a name="l00058"></a>00058 
-<a name="l00068"></a>00068 <span class="keywordtype">void</span>
-<a name="l00069"></a>00069 <a class="code" href="bitmap_8c.html#a96cb4116f6302d8e554b94b0e12a41a5" title="Sets the value of a single bit from a bitmap.">bitmap_setbit</a>(<a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a> *map,
-<a name="l00070"></a>00070               <span class="keywordtype">int</span> x,
-<a name="l00071"></a>00071               <span class="keywordtype">int</span> y,
-<a name="l00072"></a>00072               <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a> value);
-<a name="l00073"></a>00073 
-<a name="l00084"></a>00084 <a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a>*
-<a name="l00085"></a>00085 <a class="code" href="bitmap_8c.html#aa1d7a097132b1f416722e5e46c3b4e21" title="Retrieves a list of all the connected regions from a bitmap.">bitmap_find_all_regions</a>(<a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>* map);
-<a name="l00086"></a>00086 
-<a name="l00096"></a>00096 <span class="keywordtype">char</span>*
-<a name="l00097"></a>00097 <a class="code" href="bitmap_8c.html#aa254e2f18dcd08813e2844b4760d20fd" title="Generates the string representation of multiple regions on a matrix.">bitmap_regions_print</a>(<span class="keyword">const</span> <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>* map,
-<a name="l00098"></a>00098                      <span class="keyword">const</span> <a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a>* regions);
-<a name="l00099"></a>00099 
-<a name="l00107"></a>00107 <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>*
-<a name="l00108"></a>00108 <a class="code" href="bitmap_8c.html#a16d899c642d1dca0adc01878dde19b2d" title="Reads a bitmap from a file.">bitmap_read</a>(FILE* infile);
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110 <span class="preprocessor">#endif </span><span class="comment">/* BITMAP_H */</span>
+<a name="l00059"></a>00059 
+<a name="l00069"></a>00069 <span class="keywordtype">void</span>
+<a name="l00070"></a>00070 <a class="code" href="bitmap_8c.html#a96cb4116f6302d8e554b94b0e12a41a5" title="Sets the value of a single bit from a bitmap.">bitmap_setbit</a>(<a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a> *map,
+<a name="l00071"></a>00071               <span class="keywordtype">int</span> x,
+<a name="l00072"></a>00072               <span class="keywordtype">int</span> y,
+<a name="l00073"></a>00073               <a class="code" href="bitmap_8h.html#abb0a6c6bdf6faffa9e3773e1d687d67b" title="Type representing a single bit in an image matrix.">image_bit</a> value);
+<a name="l00074"></a>00074 
+<a name="l00085"></a>00085 <a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a>*
+<a name="l00086"></a>00086 <a class="code" href="bitmap_8c.html#aa1d7a097132b1f416722e5e46c3b4e21" title="Retrieves a list of all the connected regions from a bitmap.">bitmap_find_all_regions</a>(<a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>* map);
+<a name="l00087"></a>00087 
+<a name="l00097"></a>00097 <span class="keywordtype">char</span>*
+<a name="l00098"></a>00098 <a class="code" href="bitmap_8c.html#aa254e2f18dcd08813e2844b4760d20fd" title="Generates the string representation of multiple regions on a matrix.">bitmap_regions_print</a>(<span class="keyword">const</span> <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>* map,
+<a name="l00099"></a>00099                      <span class="keyword">const</span> <a class="code" href="structbitmap__region__list.html" title="Type representing a list of multiple bitmap_region&#39;s.">bitmap_region_list</a>* regions);
+<a name="l00100"></a>00100 
+<a name="l00108"></a>00108 <a class="code" href="structbitmap.html" title="Type for a matrix of bits.">bitmap</a>*
+<a name="l00109"></a>00109 <a class="code" href="bitmap_8c.html#a16d899c642d1dca0adc01878dde19b2d" title="Reads a bitmap from a file.">bitmap_read</a>(FILE* infile);
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111 <span class="preprocessor">#endif </span><span class="comment">/* BITMAP_H */</span>
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -123,7 +123,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 01:39:16 for EP2 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Sep 27 2011 08:53:20 for EP2 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
