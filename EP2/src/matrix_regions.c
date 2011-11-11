@@ -29,7 +29,7 @@ int main(void) {
     for(;;) {
         bitmap* map;
         bitmap_region_list *regions;
-        
+
         map = bitmap_read(stdin);
         if(map == NULL)
             break;
@@ -40,7 +40,7 @@ int main(void) {
 
             for(y = 0; y < map->height; y++) {
                 for(x = 0; x < map->width; x++) {
-                    printf("%u", map->data[(y * map->width) + x]);
+                    printf("%u ", (unsigned int)bitmap_getbit(map, x, y));
                 }
                 printf("\n");
             }
@@ -51,7 +51,7 @@ int main(void) {
         if(regions != NULL) {
             unsigned int region_count, region_num;
             bitmap_region_list *region_cur, *region_next;
-                
+
             region_count = 0;
             linked_list_foreach(regions, region_cur, region_next, next) {
                 region_count++;
@@ -71,7 +71,7 @@ int main(void) {
             linked_list_foreach(regions, region_cur, region_next, next) {
                 unsigned int point_count;
                 bitmap_region *point_cur, *point_next;
-                    
+
                 point_count = 0;
                 linked_list_foreach(region_cur->region, point_cur, point_next, next) {
                     point_count++;
@@ -80,10 +80,15 @@ int main(void) {
                 printf("  %u: %u pontos\n", region_num, point_count);
                 region_num++;
             }
+            
+            bitmap_region_list_free(regions);
         } else {
             printf("Nenhuma região encontrada.\n");
         }
+        
+        bitmap_free(map);
     }
 
     return 0;
 }
+

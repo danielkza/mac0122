@@ -27,7 +27,7 @@ bitmap_getbit(const bitmap *map,
         return 0;
     }
 
-    return map->data[y * map->width + x];
+    return map->data[(y * map->width) + x];
 }
 
 void
@@ -43,24 +43,92 @@ bitmap_setbit(bitmap *map,
         return;
     }
 
-    map->data[y * map->width + x] = value;
+    map->data[(y * map->width) + x] = value;
+}
+
+void
+bitmap_free(bitmap *map)
+{
+    if(map != NULL) {
+        if(map->data != NULL)
+            free(map->data);
+        
+        free(map);
+    }
+}
+
+void
+bitmap_region_free(bitmap_region *region)
+{
+    if(region != NULL)
+        linked_list_free(region, bitmap_region, next);
+}
+
+void
+bitmap_region_list_free(bitmap_region_list* list)
+{
+    if(list != NULL) {
+        bitmap_region_list *iter, *iter_next;
+
+        /* Free both the stored regions themselves, and the list entries */
+        linked_list_foreach(list, iter, iter_next, next) {
+            bitmap_region_free(iter->region);
+            free(iter);
+        }
+    }
 }
 
 /**
+ * @internal
+ *
+ * Adds a point to the list of points representing a region on a bitmap
+ *
+ * @param x            0-based index of the starting position on the x-axis
+ * @param y            0-based index of the starting position on the y-axis
+ * @param region_start Pointer to a pointer to a bitmap_region that will be
+ *                     updated to refer to the first item of the newly created
+ *                     region
+ * @param region_end Pointer to a pointer to a bitmap_region that will be
+ *                     updated to refer to the last item of the newly created
+ *                     region
+ */
+static void
+bitmap_region_entry_add__(int x,
+                          int y,
+                          bitmap_region **region_start,
+                          bitmap_region **region_end)
+{
+    bitmap_region *region_entry = malloc(sizeof(*region_entry));
+    if(region_entry == NULL)
+        return;
+
+    region_entry->x = x;
+    region_entry->y = y;
+    region_entry->next = NULL;
+
+    if(*region_start == NULL)
+        *region_start = region_entry;
+    else if(*region_end != NULL)
+        (*region_end)->next = region_entry;
+
+    *region_end = region_entry;
+}
+
+/**
+ * @internal
+ *
  * Retrieves a single connected regions from a bitmap, starting at a given
  * point.
  *
  * @param map          The bitmap to use
  * @param start_x      0-based index of the starting position on the x-axis
  * @param start_y      0-based index of the starting position on the y-axis
- * @param region_start Pointer to a pointer to a bitmap_region that will be 
+ * @param region_start Pointer to a pointer to a bitmap_region that will be
  *                     updated to refer to the first item of the newly created
  *                     region
- * @param region_end Pointer to a pointer to a bitmap_region that will be 
+ * @param region_end Pointer to a pointer to a bitmap_region that will be
  *                     updated to refer to the last item of the newly created
  *                     region
- *
- * @internal
  */
 
 static int
@@ -70,7 +138,16 @@ bitmap_find_region__(bitmap *map,
                      bitmap_region** region_start,
                      bitmap_region** region_end)
 {
-    bitmap_region *region_entry;
+    /* Array of structures representing the directions we'll check */
+    struct {
+        int x, y;
+    } const deltas[] = {
+        { 1,  0}, /* right */ {-1,  0}, /* left */
+        { 0,  1}, /* down  */ { 0, -1}  /* up   */
+    };
+    /* All elements are zero-initialized */
+    unsigned int edges[ARRAY_SIZE(deltas)] = {0};
+    unsigned int i, j, k;
 
     if(region_start == NULL || region_end == NULL)
         return 0;
@@ -82,28 +159,45 @@ bitmap_find_region__(bitmap *map,
 
     /* Clear the bit so it is not found again later: this makes our algorithm
        much simpler as we can just recursively walk around all adjacent points
-       naively. */                    
+       naively. */
     bitmap_setbit(map, start_x, start_y, 0);
-        
-    region_entry = malloc(sizeof(*region_entry));
-    if(region_entry == NULL)
-        return 0;
+    bitmap_region_entry_add__(start_x, start_y, region_start, region_end);
 
-    region_entry->x = start_x;
-    region_entry->y = start_y;
-    region_entry->next = NULL;
+    /* Instead of doing a naive recursion to four directions for each point.
+       try walking as much as possible in each direction first, until a zero
+       point is reached. */
 
-    if(*region_start == NULL)
-        *region_start = region_entry;
-    else if(*region_end != NULL)
-        (*region_end)->next = region_entry;
-        
-    *region_end = region_entry;
+    for(i = 0; i < ARRAY_SIZE(deltas); i++) {
+        int dx = deltas[i].x, dy = deltas[i].y,
+            x = start_x + dx,
+            y = start_y + dy;
 
-    bitmap_find_region__(map, start_x + 1, start_y, region_start, region_end);
-    bitmap_find_region__(map, start_x - 1, start_y, region_start, region_end);
-    bitmap_find_region__(map, start_x, start_y + 1, region_start, region_end);
-    bitmap_find_region__(map, start_x, start_y - 1, region_start, region_end);
+        while(bitmap_getbit(map, x, y) != 0)
+        {
+            bitmap_setbit(map, x, y, 0);
+            bitmap_region_entry_add__(x, y, region_start, region_end);
+
+            x += dx;
+            y += dy;
+
+            edges[i]++;
+        }
+    }
+
+    /* Now that we walked and removed as much points as possible in all
+       directions, we must call bitmap_find_region__() manually for each
+       direction, because the center points have been unset already. */
+
+    for(i = 0; i < ARRAY_SIZE(deltas); i++) {
+        for(j = 1; j <= edges[i]; j++) {
+            for(k = 0; k < ARRAY_SIZE(deltas); k++) {
+                int x = start_x + (deltas[i].x * j) + deltas[k].x,
+                    y = start_y + (deltas[i].y * j) + deltas[k].y;
+
+                bitmap_find_region__(map, x, y, region_start, region_end);
+            }
+        }
+    }
 
     return 1;
 }
@@ -142,17 +236,17 @@ bitmap_find_all_regions(bitmap* map)
             }
         }
     }
-    
+
     return list_start;
 
 error:
-    /* An error may happen when we have acquired a region, but are unable to 
+    /* An error may happen when we have acquired a region, but are unable to
        continue adding it to the region list. Make sure not to leak it in that
        case. */
     if(region_start != NULL) {
         linked_list_free(region_start, bitmap_region, next);
     }
-    
+
     if(list_start != NULL) {
         bitmap_region_list *iter, *iter_next;
 
@@ -180,13 +274,13 @@ bitmap_regions_print(const bitmap* map,
     if(regions == NULL)
         return NULL;
 
-    /* Allocate space for a string representing the matrix. In a row, one 
+    /* Allocate space for a string representing the matrix. In a row, one
        character per column is meant for a region letter and another one for a
        paddinng whitespace (a space for all but the last column, which is
        followed by a newline). */
     regions_str_row_size = (2 * map->width);
     regions_str_size = (map->height * regions_str_row_size) + 1;
-                                           
+
     regions_str = malloc(regions_str_size);
     if(regions_str == NULL)
         return NULL;
@@ -202,7 +296,7 @@ bitmap_regions_print(const bitmap* map,
     ch = 'a';
     linked_list_foreach(regions, region_cur, region_next, next) {
         const bitmap_region *point_cur, *point_next;
-        
+
         linked_list_foreach(region_cur->region, point_cur, point_next, next) {
             regions_str[(point_cur->y * regions_str_row_size) +
                         (2 * point_cur->x)] = ch;
@@ -221,7 +315,7 @@ bitmap_read(FILE* infile)
     image_bit *bitmap_data = NULL;
     bitmap* map = NULL;
 
-    if(fscanf(infile, "%u %u", &width, &height) != 2
+    if(fscanf(infile, "%u %u", &height, &width) != 2
        || width == 0 || height == 0)
     {
         return NULL;
@@ -245,11 +339,11 @@ bitmap_read(FILE* infile)
 
         if(isspace(c))
             continue;
-            
+
         switch(c) {
         case '0':
             /* The data array starts zeroed, skip a redundant assignmen */
-            
+
             /* bitmap_data[y * width + x] = 0; */
             break;
         case '1':
@@ -282,3 +376,4 @@ error:
 
     return NULL;
 }
+

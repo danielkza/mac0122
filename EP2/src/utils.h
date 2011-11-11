@@ -13,11 +13,20 @@
 #include <stdio.h>
 
 /**
+ * Retrieves the compile-time size, in elements, of a one-dimensional array
+ *
+ * @param array An array
+ *
+ * @return The number of elements in the array
+ */
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+
+/**
  * Iterates through a linked list free()'ing all it's items
- * 
+ *
  * @param list The linked list
  * @param type The type of the linked list nodes
- * @param next_member Name of the member of the list node that points to the 
+ * @param next_member Name of the member of the list node that points to the
  *                    next item
  */
 
@@ -46,10 +55,10 @@
  *     int n;
  *     struct my_list *next;
  * } my_list;
- * 
+ *
  * my_list *head, *tail, *list_cur, *list_next;
  * int i;
- * 
+ *
  * for(i = 0; i < 100; i++) {
  *     my_list* item = malloc(sizeof(*item));
  *
@@ -63,13 +72,13 @@
  *
  *     tail = item;
  *  }
-  
+
  * linked_list_foreach(head, list_cur, list_next, next) {
  *     printf("%d\n", list_cur->n);
  * }
  *
  * @endcode
- * 
+ *
  * @param list        Pointer to the first node of the list
  * @param iter        A variable with the type of a pointer to a list node,
  *                    that will receive the current node during the iteration

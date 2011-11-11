@@ -14,8 +14,6 @@ OBJS := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 
 VPATH = $(SRCDIR)
 
-all: $(OBJDIR)/$(EXECUTABLE) docs
-
 $(OBJDIR)/$(EXECUTABLE): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -33,6 +31,7 @@ endif
 
 .PHONY: clean
 clean:
-	-rm -f $(OBJDIR)/*.o $(OBJDIR)/*.exe$ (EXECUTABLE)
+	-rm -f $(OBJDIR)/*.o $(OBJDIR)/*.exe $(EXECUTABLE)
 
+all: $(OBJDIR)/$(EXECUTABLE) docs
 
