@@ -1,3 +1,5 @@
+#if 0
+
 #include <stdlib.h>
 
 #include "hash_map.h"
@@ -108,3 +110,5 @@ void hash_map_add(hash_map *map,
 
 
 }
+
+#endif
