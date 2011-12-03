@@ -30,22 +30,22 @@ bishop_pos_stack* bishop_pos_stack_create(int size)
     return stack;
 }
 
-void bishop_pos_stack_pop(bishop_pos_stack *stack, int *diag_main, int *diag_sec)
+void bishop_pos_stack_pop(bishop_pos_stack *stack, int *x, int *y)
 {
-    if(diag_main == NULL || diag_sec == NULL)
+    if(x == NULL || y == NULL)
         return;
     
     if(stack == NULL || stack->len == 0) {
-        *diag_main = *diag_sec = -1;
+        *x = *y = -1;
         return;
     }
 
-    *diag_main = stack->data[len-1].diag_main;
-    *diag_sec = stack->data[len-1].diag_sec;
+    *x = stack->data[len-1].x;
+    *y = stack->data[len-1].y;
     (stack->len)--;
 }
 
-void bishop_pos_stack_push(bishop_pos_stack *stack, int diag_main, int diag_sec)
+void bishop_pos_stack_push(bishop_pos_stack *stack, int x, int y)
 {
     if(stack == NULL || stack->size == 0)
         return;
@@ -55,23 +55,23 @@ void bishop_pos_stack_push(bishop_pos_stack *stack, int diag_main, int diag_sec)
         stack->data = realloc(sizeof(bishop_pos) * stack->size);
     }
 
-    stack->data[stack->len].diag_main = diag_main;
-    stack->data[stack->len].diag_sec = diag_sec;
+    stack->data[stack->len].x = x;
+    stack->data[stack->len].y = y;
     stack->len++;
 }
 
-void bishop_pos_stack_peek(bishop_pos_stack *stack, int index, int *diag_main, int *diag_sec)
+void bishop_pos_stack_peek(bishop_pos_stack *stack, int index, int *x, int *y)
 {
-    if(diag_main == NULL || diag_sec == NULL)
+    if(x == NULL || y == NULL)
         return;
 
     if(stack == NULL || stack->len >= index) {
-        *diag_main = *diag_sec = -1;
+        *x = *y = -1;
         return;
     }
 
-    *diag_main = stack->data[index].diag_main;
-    *diag_sec = stack->data[index].diag_sec;
+    *x = stack->data[index].x;
+    *y = stack->data[index].y;
 }
 
 void bishop_pos_stack_free(bishop_pos_stack *stack)
@@ -95,10 +95,10 @@ board_t *bishop_pos_stack_to_board(bishop_pos_stack *stack, int board_size)
         return NULL;
 
     for(i = 0; i < stack->len; i++) {
-        int diag_main, diag_sec;
-        bishop_pos_stack_peek(stack, i, &diag_main, &diag_sec);
+        int x, y;
+        bishop_pos_stack_peek(stack, i, &x, &y);
 
-        if(diag_main < 0 || diag_sec < 0)
+        if(x < 0 || y < 0)
             break;
 
         

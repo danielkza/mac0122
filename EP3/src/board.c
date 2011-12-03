@@ -16,14 +16,14 @@ static unsigned int board_size_to_bytes(int n)
     return data_size;
 }
 
-static board_t *board_init_new(int size,
+static board_t *board_init_new(unsigned int size,
                                board_t *copy_from)
 {
     board_t *board;
     unsigned int data_size;
     unsigned char *data;
 
-    if(size <= 0 || size > UCHAR_MAX+1)
+    if(size <= 0 || size > UINT_MAX)
         return NULL;
 
     board = malloc(sizeof(*board));
@@ -220,10 +220,28 @@ int board_compare(board_t *board_1, board_t *board_2)
 
 }
 
+static unsigned int l_rot(unsigned int byte, unsigned int n) {
+    return (byte << n) | (byte >> (WORD_BIT - n));
+}
+
+
+static unsigned int r_rot(unsigned int byte, unsigned int n) {
+    return (byte >> n) | (byte << (WORD_BIT - n));
+}
+
+static unsigned char mix_byte(unsigned char lower, unsigned char upper)
+{
+    const unsigned char lower_bits = (CHAR_BIT+1) / 2;
+    const unsigned char lower_mask = (1 << lower_bits) - 1;
+    const unsigned char upper_mask = ~lower_mask;
+
+    return (lower & lower_mask) | ((upper << lower_bits) & upper_mask);
+}
+
 unsigned long board_hash(board_t *board, board_pos_t *lookup_table)
 {
-    int x, y;
-    int pos_byte, cur_byte, data_size;
+    unsigned char x, y;
+    unsigned int pos_byte, cur_byte, data_size;
     unsigned long hash;
 
     if(board == NULL || lookup_table == NULL)
@@ -257,10 +275,13 @@ unsigned long board_hash(board_t *board, board_pos_t *lookup_table)
             if(!(cur_byte & (1 << i)))
                 continue;
 
-            dist_x = x % board->size;
-            dist_y = y % board->y;
+            dist_x = x % (board->size / 2);
+            dist_y = y % (board->size / 2);
 
-            hash += (dist_x * 92881) ^ dist_y;
+            temp = mix_byte(dist_x, dist_y);
+            temp ^= l_rot(mix_byte(dist_y, dist_x), temp % CHAR_BIT);
+
+            hash ^= r_rot(temp, )
 
     }
 done:
