@@ -1,7 +1,7 @@
 Ao dar o 'make' (ou usando 'make docs'), será gerada além dos binários a
 documentação do EP, na pasta 'docs', se o programa doxygen
 (http://www.doxygen.org) estiver disponível.
-Incluí também uma versão já pronta da documentação por conveniência.
+Incluí também uma versão já stpronta da documentação por conveniência.
 
 O jeito mais fácil de visualizá-la é em HTML, é só abrir o arquivo
 'docs/html/index.html'.
