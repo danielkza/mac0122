@@ -39,43 +39,14 @@ int main(int argc, char **argv)
 			display_stats = 1;
 	}
 
-    #if 0
-	{
-		board_t *board = board_create(4, 2);
-		int i;
-		uint64_t hash, hash2;
-
-		board_add_bishop(board, 1, 0);
-		board_add_bishop(board, 1, 1);
-		board_print(board);
-
-		hash = board_hash(board, &hash2);
-		printf("h: %llu, h2: %llu\n", hash, hash2);
-
-		board_pop_bishop(board);
-		board_pop_bishop(board);
-		board_add_bishop(board, 1, 0);
-		board_add_bishop(board, 1, 2);
-		board_print(board);
-
-		hash = board_hash(board, &hash2);
-		printf("h: %llu, h2: %llu\n", hash, hash2);
-
-
-		return 0;
-	}
-	#endif
-
 	table = bishops_solve(board_size, bishop_num);
 	if(display_boards) {
 		/*board_hash_table_print(table) */;
 	}
 
-	printf("counting uniques\n");
-
 	equiv_count = bishops_count_equivalent(table, display_boards != 0);
 
-	printf("%d tabuleiros, %d unicos\n", table->used, equiv_count);
+	printf("%d tabuleiros, %d nao equivalentes\n", table->used, equiv_count);
 
 	return 0;
 

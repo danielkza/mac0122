@@ -65,10 +65,10 @@ int bishops_count_equivalent(board_hash_table_t *table, int print)
             }
 
             if(!found_equiv) {
+                if(print)
+                   board_print(list->item);
                 count++;
             }
-
-            /* board_print(list->item); */
         }
     #else
         if(table->data[i] != NULL)
@@ -90,7 +90,6 @@ board_hash_table_t *bishops_solve(uint8_t board_size, unsigned int num_bishops)
 
     x = 0; y = 0;
     for(;;) {
-        printf("progress: %d/%d\n", (y * board_size) +x, board_size * board_size);
         bishops_solve_partial(board, table, x, y, num_bishops);
 
         if(++x >= board->size) {
