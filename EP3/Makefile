@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2 -Wall -Wextra -ansi -pedantic
+CFLAGS = -O3 -Wall -Wextra -ansi -pedantic
 LDFLAGS =
 
 DOXYGEN:=$(shell which doxygen 2>/dev/null)
@@ -13,7 +13,6 @@ SOURCES := $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c)))
 OBJS := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 
 VPATH = $(SRCDIR)
-
 
 $(OBJDIR)/$(EXECUTABLE): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -35,6 +34,6 @@ endif
 
 .PHONY: clean
 clean:
-	-rm -f $(OBJDIR)/*.o $(OBJDIR)/*.exe $(EXECUTABLE)
+	-rm -f $(OBJDIR)/*.o $(OBJDIR)/*.exe $(OBJDIR)/$(EXECUTABLE)
 
 
